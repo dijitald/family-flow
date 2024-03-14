@@ -1,10 +1,9 @@
 import { Chore } from "./chore.model";
 import { Transaction } from "./transaction.model";
 
-
 export class Household {
     constructor(
-        public id: string, 
+        public id: string,
         public members: string[], 
         public chores: Chore[],
         public createdOn: Date,
