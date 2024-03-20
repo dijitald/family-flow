@@ -1,35 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
 
-const GRAPH_ENDPOINT = 'Enter_the_Graph_Endpoint_Herev1.0/me';
-
-type ProfileType = {
-  givenName?: string,
-  surname?: string,
-  userPrincipalName?: string,
-  id?: string
-}
+import * as fromApp from '../shared/store/app.reducer';
+import { User } from '../shared/models/user.model';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'], 
+  standalone: true,
+  imports: [CommonModule]
 })
 export class ProfileComponent implements OnInit {
-  profile!: ProfileType;
+  user: User = new User("","","","","","", new Date());
 
-  constructor(
-    private http: HttpClient
-  ) { }
-
+  constructor(private store: Store<fromApp.AppState>) { }
+  
   ngOnInit() {
-    this.getProfile();
-  }
-
-  getProfile() {
-    this.http.get(GRAPH_ENDPOINT)
-      .subscribe(profile => {
-        this.profile = profile;
-      });
+    this.store.select('auth').subscribe(authState => {
+      if (authState.user)
+        this.user = authState.user;
+    });
   }
 }

@@ -1,6 +1,8 @@
+import { AccountInfo } from "@azure/msal-browser";
 import { createReducer, on } from "@ngrx/store";
-import { User } from "../../user.model";
-import { authenticateComplete, authenticateFailed, clearError, signInStart, logout } from "./auth.actions";
+
+import { User } from "../models/user.model";
+import { signInComplete, authenticateFailed, clearError, logout } from "./auth.actions";
 
 export interface State {
     user: User;
@@ -17,11 +19,11 @@ const initialState: State = {
 }
 
 export const authReducer = createReducer(initialState,
-    on(authenticateComplete, (state, action) => {
+    on(signInComplete, (state, action) => {
         console.log('login complete reducer', action);
         return {
             ...state,
-            user: action.payload.user,
+            user: action.payload,
             authError: null,
             isLoggedIn: true,
             loading: false,
@@ -33,14 +35,6 @@ export const authReducer = createReducer(initialState,
             ...state,
             user: null,
             isLoggedIn: false,
-        }
-    }),
-    on(signInStart, (state, action) => {
-        console.log('loginStart reducer', action);
-        return {
-            ...state,
-            authError: null,
-            loading: true
         }
     }),
     on(authenticateFailed, (state, action) => {

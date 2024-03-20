@@ -5,9 +5,15 @@
 
   <a mat-button [routerLink]="['profile']">Profile</a>
 
-  <button mat-raised-button *ngIf="!loginDisplay" (click)="login()">Login</button>
+  <button mat-raised-button *ngIf="!userIsLoggedIn" (click)="login()">Login</button>
+
+  <button mat-raised-button [matMenuTriggerFor]="logoutMenu" *ngIf="userIsLoggedIn">Account</button>
+  <mat-menu #logoutMenu="matMenu">
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
 
 </mat-toolbar>
 <div class="container">
+  <!--This is to avoid reload during acquireTokenSilent() because of hidden iframe -->
   <router-outlet *ngIf="!isIframe"></router-outlet>
 </div>

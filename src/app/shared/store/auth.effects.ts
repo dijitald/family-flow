@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
+import { MSAL_GUARD_CONFIG, MsalGuardConfiguration, MsalService } from "@azure/msal-angular";
+import { AuthenticationResult, PopupRequest, RedirectRequest } from "@azure/msal-browser";
+import { Inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
+import { map, tap } from "rxjs/operators";
 import { Store } from "@ngrx/store";
-import { catchError, map, switchMap, take, tap } from "rxjs/operators";
-import { authenticateComplete, authenticateFailed, autoLogin, logout, signInStart, signupStart } from "./auth.actions";
-import { HttpClient } from "@angular/common/http";
-import { of } from "rxjs";
-import { Router } from "@angular/router";
-import { User } from "../models/user.model";
-import { AuthService } from "../auth.service";
+
+import { logout, signInComplete, signInSetActiveAccount, signInStart } from "./auth.actions";
+import { UserService } from "../services/user.service";
+import * as fromApp from '../store/app.reducer';
 
 export interface AuthResponseData {
     kind: string;
@@ -21,102 +21,86 @@ export interface AuthResponseData {
 
 @Injectable()
 export class AuthEffects {
-    apiKey = 'AIzaSyBZR3OjHPNxoGxLPz8yjLVYTIAh_vGjink';
-    signUpUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+this.apiKey;
-    signInUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+this.apiKey;
+  private usePopUp: boolean = true;
 
-    constructor(private actions$: Actions, private store: Store, private http : HttpClient, private router: Router, private authSvc : AuthService) {} 
+  constructor(
+    private actions$: Actions, 
+    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
+    private authService: MsalService, 
+    private userService: UserService,
+    private store: Store<fromApp.AppState>,
+    ) {} 
 
-    authSignIn = createEffect(
-        () => this.actions$.pipe(
-            ofType(signInStart, signupStart),
-            tap((authData) => {console.log('loginStart Effect', authData);}),
-            switchMap((authData) => {
-                let url = this.signInUrl;
-                if (authData.type === signupStart.type) { url = this.signUpUrl;}
+  authSignIn = createEffect(
+      () => this.actions$.pipe(
+        ofType(signInStart),
+        tap((authData) => {console.log('signInStart Effect', authData);}),
+        map(() => {
+          if (this.usePopUp) {
+            if (this.msalGuardConfig.authRequest){
+              console.log('authrequest', this.msalGuardConfig.authRequest);
+              this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
+                .subscribe((response: AuthenticationResult) => {
+                  this.store.dispatch(signInSetActiveAccount({payload: response.account}));
+                  this.store.dispatch(signInComplete({payload: this.userService.loadUser(response.account)}));
+                  //this.authService.instance.setActiveAccount(response.account);
+                });
+              } else {
+              console.log('authrequest', 'no auth request');
+                this.authService.loginPopup()
+                  .subscribe((response: AuthenticationResult) => {
+                  this.store.dispatch(signInSetActiveAccount({payload: response.account}));
+                  this.store.dispatch(signInComplete({payload: this.userService.loadUser(response.account)}));
+                  //this.authService.instance.setActiveAccount(response.account);
+              });
+            }
+          }
+          else {
+            if (this.msalGuardConfig.authRequest){
+              console.log('authrequest', this.msalGuardConfig.authRequest);
+              this.authService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
+            } else {
+              console.log('authrequest', 'no auth request');
+              this.authService.loginRedirect();
+            }          
+          }
+        })
+      ), 
+      {dispatch: false}
+  );
 
-                return this.http.post<AuthResponseData>(url, {
-                    email: authData.payload.email,
-                    password: authData.payload.password,
-                    returnSecureToken: true
-                }).pipe(
-                    take(1),
-                    tap(resData => { console.log('signIn/Up tap', resData);}),
-                    map(resData => {
-                        const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
-                        const user = new User(resData.email,resData.localId, resData.idToken, expirationDate);
-                        localStorage.setItem('userData', JSON.stringify(user));
-                        this.authSvc.setLogoutTimer(+resData.expiresIn * 1000);
-                        return authenticateComplete({payload: {user: user, redirect: true}});
-                    }),
-                    catchError((errorRes) => {
-                      let errorMessage = 'An unknown error occurred!';
-                      console.log('errorRes', errorRes.error.error.message);
-                      if (!errorRes.error || !errorRes.error.error) {
-                        return of(authenticateFailed({payload: errorMessage}));
-                      }
-                      switch (errorRes.error.error.message) {
-                        case 'EMAIL_EXISTS':
-                          errorMessage = 'This email exists already';
-                          break;
-                        case 'EMAIL_NOT_FOUND':
-                          errorMessage = 'This email does not exist.';
-                          break;
-                        case 'INVALID_PASSWORD':
-                          errorMessage = 'This password is not correct.';
-                          break;
-                          case 'INVALID_LOGIN_CREDENTIALS':
-                            errorMessage = 'Invalid Login Credentials.';
-                            break;
-                        }
-                      return of(authenticateFailed({ payload: errorMessage}));
-                    })
-         
-                );
-            })
-        )
-    );
-    authRedirect = createEffect(
-        () => this.actions$.pipe(
-            ofType(authenticateComplete),
-            tap((authData) => {
-                console.log('authRedirect Effect', authData);
-                if (authData.payload.redirect) {
-                  this.router.navigate(['/recipes']);
-              }
-            }),
-        ), 
-        {dispatch: false}
-    );
-    authLogout = createEffect(
-        () => this.actions$.pipe(
-            ofType(logout),
-            map((authData) => {
-                console.log('logging out');
-                this.authSvc.clearLogoutTimer();
-                localStorage.removeItem('userData'); 
-                this.router.navigate(['/auth']);
-            }),
-        ), 
-        {dispatch: false}
-    );
-    authAutoLogIn = createEffect(
-        () => this.actions$.pipe(
-            ofType(autoLogin),
-            map((authData) => {
-                console.log('autoLogin');
-                const userData : { email: string; userId: string; _token: string; _tokenExpiration: string } = JSON.parse(localStorage.getItem('userData'));
-                if (!userData) { return logout();}
-                const user = new User(userData.email, userData.userId, userData._token, new Date(userData._tokenExpiration));  
-                if(user.token) { 
-                  console.log('autoLogin success');
-                  this.authSvc.setLogoutTimer(new Date(userData._tokenExpiration).getTime() - new Date().getTime());
-                  return authenticateComplete({payload: {user: user, redirect: false}});
-                }
-                else {
-                  return logout();
-                }
-            }),
-        )
-    );
+  authSetActiveAccount = createEffect(
+    () => this.actions$.pipe(
+      ofType(signInSetActiveAccount),
+      tap((authData) => {console.log('authSetActiveAccount Effect', authData);}),
+      map((authData) => {
+        let activeAccount = authData.payload;
+       
+        if (activeAccount) {
+          this.authService.instance.setActiveAccount(activeAccount);
+        }
+        if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
+          let accounts = this.authService.instance.getAllAccounts();
+          this.authService.instance.setActiveAccount(accounts[0]);
+        }
+      })
+    ),
+    {dispatch: false}
+  );
+
+  authLogout = createEffect(
+    () => this.actions$.pipe(
+      ofType(logout),
+      map(() => {
+        console.log('logout effect');
+        localStorage.removeItem('userData'); 
+        if (this.usePopUp) {
+          this.authService.logoutPopup({ mainWindowRedirectUri: "/" });
+        } else {
+          this.authService.logoutRedirect();
+        }
+      }),
+    ), 
+    {dispatch: false}
+  );
 }

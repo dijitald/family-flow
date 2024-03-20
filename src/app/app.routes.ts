@@ -1,25 +1,18 @@
 import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 import { BrowserUtils } from "@azure/msal-browser";
 import { HomeComponent } from "./home/home.component";
-import { ProfileComponent } from "./profile/profile.component";
 
 export const routes: Routes = [
-  {
-    path: "profile",
-    component: ProfileComponent,
-  },
-  {
-    path: "",
-    component: HomeComponent,
-  },
+  { path: "profile", loadComponent : () => import('./profile/profile.component').then(m => m.ProfileComponent) },
+  { path: 'login-failed', loadComponent : () => import('./shared/auth/authFailed.component').then(m => m.AuthFailedComponent)},
+  { path: "", component: HomeComponent },
 ];
-
-const isIframe = window !== window.parent && !window.opener;
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
+      preloadingStrategy: PreloadAllModules,
       // Don't perform initial navigation in iframes or popups
       initialNavigation:
         !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup()
@@ -30,4 +23,5 @@ const isIframe = window !== window.parent && !window.opener;
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
+
 

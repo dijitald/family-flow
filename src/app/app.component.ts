@@ -1,55 +1,45 @@
-import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Subject, filter, takeUntil } from 'rxjs';
-import { InteractionStatus } from '@azure/msal-browser';
+import { RouterModule } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+
+import * as fromApp from './shared/store/app.reducer';
+import { logout, signInStart } from './shared/store/auth.actions';
+import { UserService } from './shared/services/user.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule, MatMenuModule],
 })
 export class AppComponent implements OnInit {
   title = 'Family Flow';
   isIframe = false;
-  loginDisplay = false;
-  private readonly _destroying$ = new Subject<void>();
+  userIsLoggedIn = false;
 
-  constructor(private broadcastService: MsalBroadcastService, private authService: MsalService) { }
+  constructor(
+    private store: Store<fromApp.AppState>,
+    private userService: UserService,
+  ) {}
 
   ngOnInit() {
-    this.isIframe = window !== window.parent && !window.opener;
-
-    this.broadcastService.inProgress$
-    .pipe(
-      filter((status: InteractionStatus) => status === InteractionStatus.None),
-      takeUntil(this._destroying$)
-    )
-    .subscribe(() => {
-      this.setLoginDisplay();
-    })
+    this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
+    this.userService.ngOnInit();
+    this.store.select('auth').subscribe(authState => {
+      this.userIsLoggedIn = authState.isLoggedIn;
+    });
   }
 
   login() {
-    this.authService.loginRedirect();
-      //or
-    // this.authService.loginPopup()
-    //   .subscribe({
-    //     next: (result) => {
-    //       console.log(result);
-    //       this.setLoginDisplay();
-    //     },
-    //     error: (error) => console.log(error)
-    //   });
+    this.store.dispatch(signInStart());
   }
-
-  setLoginDisplay() {
-    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
-  }
-
-  ngOnDestroy(): void {
-    this._destroying$.next(undefined);
-    this._destroying$.complete();
+  
+  logout() {
+    this.store.dispatch(logout());
   }
 }
