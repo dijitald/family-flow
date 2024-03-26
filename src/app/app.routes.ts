@@ -3,7 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 import { BrowserUtils } from "@azure/msal-browser";
 import { HomeComponent } from "./home/home.component";
 
-export const routes: Routes = [
+export const appRoutes: Routes = [
   { path: "profile", loadComponent : () => import('./profile/profile.component').then(m => m.ProfileComponent) },
   { path: 'login-failed', loadComponent : () => import('./shared/auth/authFailed.component').then(m => m.AuthFailedComponent)},
   { path: "", component: HomeComponent },
@@ -11,8 +11,9 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {
+    RouterModule.forRoot(appRoutes, {
       preloadingStrategy: PreloadAllModules,
+      scrollPositionRestoration: "enabled",
       // Don't perform initial navigation in iframes or popups
       initialNavigation:
         !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup()

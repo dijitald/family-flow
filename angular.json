@@ -5,7 +5,11 @@
   "projects": {
     "family-flow": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+            "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -20,12 +24,38 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
+            "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+                "apexcharts",
+                "highlight.js",
+                "crypto-js/enc-utf8",
+                "crypto-js/hmac-sha256",
+                "crypto-js/enc-base64",
+                "flat",
+                "quill-delta"
             ],
-            "styles": [
-              "src/styles.css"
+            "assets": [
+              "src/favicon-16x16.png",
+              "src/favicon-32x32.png",
+              "src/assets",
+              {
+                  "glob": "_redirects",
+                  "input": "src",
+                  "output": "/"
+              }
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                  "src/@fuse/styles"
+              ]
+          },
+          "styles": [
+              "src/@fuse/styles/tailwind.scss",
+              "src/@fuse/styles/themes.scss",
+              "src/styles/vendors.scss",
+              "src/@fuse/styles/main.scss",
+              "src/styles/styles.scss",
+              "src/styles/tailwind.scss"
             ],
             "scripts": []
           },
@@ -34,13 +64,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "75kb",
+                  "maximumError": "90kb"
                 }
               ],
               "outputHashing": "all"
@@ -49,6 +79,7 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
+              "namedChunks": true,
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -85,12 +116,14 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+                "src/favicon-16x16.png",
+                "src/favicon-32x32.png",
+                "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+                "src/styles/styles.scss"
             ],
             "scripts": []
           }
