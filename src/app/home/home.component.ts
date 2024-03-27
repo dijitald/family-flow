@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
-import { InteractionStatus } from '@azure/msal-browser';
-import { filter } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import * as fromApp from '../shared/store/app.reducer';
+import { State } from '../shared/store/auth.reducer';
 
 @Component({
   selector: 'app-home',
@@ -12,32 +13,15 @@ import { filter } from 'rxjs/operators';
   imports: [CommonModule]  
 })
 export class HomeComponent implements OnInit {
-  loginDisplay = false;
+  userState: State
 
-  constructor(private authService: MsalService, private msalBroadcastService: MsalBroadcastService) { }
+  constructor(private store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
-    // this.msalBroadcastService.msalSubject$
-    //   .pipe(
-    //     filter((msg: EventMessage) => msg.eventType === EventType.LOGIN_SUCCESS),
-    //   )
-    //   .subscribe((result: EventMessage) => {
-    //     console.log(result);
-    //     const payload = result.payload as AuthenticationResult;
-    //     this.authService.instance.setActiveAccount(payload.account);
-    //     this.setLoginDisplay();
-    //   });
-      this.setLoginDisplay();
- 
-      this.msalBroadcastService.inProgress$
-      .pipe(
-        filter((status: InteractionStatus) => status === InteractionStatus.None)
-      )
-      .subscribe(() => {
-        this.setLoginDisplay();
-      })
-  }
-  setLoginDisplay() {
-    this.loginDisplay = this.authService.instance.getAllAccounts().length > 0;
+
+    this.store.select('auth').subscribe(authState => {
+      this.userState = authState;
+    });
+
   }
 }

@@ -1,13 +1,17 @@
 <mat-toolbar color="primary">
-  <a class="title" href="/">{{ title }}</a>
+  <a class="title" style="cursor: pointer;" routerLink="/">{{ title }}</a>
 
+  <div class="toolbar-spacer"></div>
+  {{ url }}
+  <div class="toolbar-spacer"></div>
+  {{ state.isLoggedIn ? 'Logged in as ' + state.user.email : '' }}
   <div class="toolbar-spacer"></div>
 
   <a mat-button [routerLink]="['profile']">Profile</a>
 
-  <button mat-raised-button *ngIf="!userIsLoggedIn" (click)="login()">Login</button>
+  <button mat-raised-button *ngIf="!state.isLoggedIn" (click)="login()">Login</button>
 
-  <button mat-raised-button [matMenuTriggerFor]="logoutMenu" *ngIf="userIsLoggedIn">Account</button>
+  <button mat-raised-button [matMenuTriggerFor]="logoutMenu" *ngIf="state.isLoggedIn">Account</button>
   <mat-menu #logoutMenu="matMenu">
     <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>

@@ -9,6 +9,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import * as fromApp from './shared/store/app.reducer';
 import { logout, signInStart } from './shared/store/auth.actions';
 import { UserService } from './shared/services/user.service';
+import { State } from './shared/store/auth.reducer';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +20,11 @@ import { UserService } from './shared/services/user.service';
   imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule, MatMenuModule],
 })
 export class AppComponent implements OnInit {
-  title = 'Family Flow';
+  title = 'Family Flow - the heartbeat of the home';
   isIframe = false;
-  userIsLoggedIn = false;
+  //userIsLoggedIn = false;
+  state : State;
+  url: string;
 
   constructor(
     private store: Store<fromApp.AppState>,
@@ -29,9 +33,16 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
-    this.userService.ngOnInit();
+
+    //TODO: Remove
+    //testing dev vs prod
+    this.url = environment.redirectUri;
+    
+    this.userService.ngOnInit(); // hack: start this service to get the user's info
+
     this.store.select('auth').subscribe(authState => {
-      this.userIsLoggedIn = authState.isLoggedIn;
+      //this.userIsLoggedIn = authState.isLoggedIn;
+      this.state = authState;
     });
   }
 
