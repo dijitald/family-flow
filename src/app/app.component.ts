@@ -6,10 +6,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 
+import * as fromAuth from './shared/store/auth.reducer';
 import * as fromApp from './shared/store/app.reducer';
 import { logout, signInStart } from './shared/store/auth.actions';
 import { UserService } from './shared/services/user.service';
-import { State } from './shared/store/auth.reducer';
 import { environment } from '../environments/environment';
 
 @Component({
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   title = 'Family Flow - the heartbeat of the home';
   isIframe = false;
   //userIsLoggedIn = false;
-  state : State;
+  state : fromAuth.State;
   url: string;
 
   constructor(

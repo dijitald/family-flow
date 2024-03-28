@@ -1,4 +1,3 @@
-import { AccountInfo } from "@azure/msal-browser";
 import { createReducer, on } from "@ngrx/store";
 
 import { User } from "../models/user.model";
