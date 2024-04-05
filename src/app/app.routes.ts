@@ -1,12 +1,45 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 import { BrowserUtils } from "@azure/msal-browser";
-import { HomeComponent } from "./home/home.component";
+import { HomeComponent } from "./features/home/home.component";
+import { MsalGuard } from "@azure/msal-angular";
+import { LayoutComponent } from "./shared/layout/layout.component";
+import { NoAuthGuard } from "./shared/auth/noAuth.guard";
+import { AuthGuard } from "./shared/auth/auth.guard";
 
 export const routes: Routes = [
-  { path: "profile", loadComponent : () => import('./profile/profile.component').then(m => m.ProfileComponent) },
-  { path: 'login-failed', loadComponent : () => import('./shared/auth/authFailed.component').then(m => m.AuthFailedComponent)},
-  { path: "", component: HomeComponent },
+  { 
+    path: "", 
+    component: HomeComponent, 
+    canActivate: [NoAuthGuard],
+    pathMatch: 'full',
+  },
+  {
+    path: "dashboard",
+    canActivate: [AuthGuard, MsalGuard],
+    canActivateChild: [AuthGuard, MsalGuard],
+    component: LayoutComponent,
+    children: [
+      {
+        path: "",
+        loadComponent : () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+      }
+    ]
+  },{ 
+    path: "profile",
+    canActivate: [AuthGuard, MsalGuard],
+    canActivateChild: [AuthGuard, MsalGuard],
+    component: LayoutComponent,
+    children: [
+      {
+        path: "",
+       loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
+          // loadComponent : () => import('./features/home/home.component').then(m => m.HomeComponent) 
+
+      }
+    ]
+  },
+  { path: '**', redirectTo: 'dashboard' },
 ];
 
 @NgModule({

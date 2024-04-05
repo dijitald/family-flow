@@ -1,0 +1,18 @@
+
+<div class="container" fxLayout="row" fxLayoutAlign="center none">
+    <div fxFlex="95%">
+      <mat-card appearance="outlined">
+        <mat-card-content *ngIf="userState.user">
+          <h2>Welcome!</h2>
+            <p><strong>Id: </strong> {{userState.user.id}}</p>
+            <p><strong>Username: </strong> {{userState.user.username}}</p>
+            <p><strong>Email: </strong> {{userState.user.email}}</p>
+            <p><strong>Name: </strong> {{userState.user.name}}</p>
+            <p><strong>Household: </strong> {{userState.user.household}}</p>
+            <p><strong>Role: </strong> {{userState.user.role}}</p>
+            <p><strong>Created: </strong> {{userState.user.createdOn}}</p>
+        </mat-card-content>
+    </mat-card>
+
+</div>
+</div>

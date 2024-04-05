@@ -6,26 +6,24 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { AppRoutingModule } from '../app/app.routes';
 import { appReducer } from '../app/shared/store/app.reducer';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
+import { BrowserAnimationsModule, provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
 import { AuthEffects } from '../app/shared/store/auth.effects';
+import { CustomMaterialModule } from './shared/custom-material/custom-material.module';
+import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    importProvidersFrom(BrowserModule, MatButtonModule, MatToolbarModule, MatListModule, MatMenuModule, AppRoutingModule, NgbModule),
+    importProvidersFrom(BrowserModule, BrowserAnimationsModule,AppRoutingModule, CustomMaterialModule.forRoot(),),
     provideRouter(routes),
     provideNoopAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
     { provide: MSAL_INSTANCE, useFactory: MSALInstanceFactory },
     { provide: MSAL_GUARD_CONFIG, useFactory: MSALGuardConfigFactory },
     { provide: MSAL_INTERCEPTOR_CONFIG, useFactory: MSALInterceptorConfigFactory },
@@ -33,7 +31,8 @@ export const appConfig: ApplicationConfig = {
     MsalGuard,
     MsalBroadcastService,
     provideStore(appReducer),
-    provideEffects(AuthEffects),  
+    provideEffects(AuthEffects),
+    { provide: Window, useValue: window },
     ]
 };
 
@@ -69,23 +68,23 @@ export function MSALInstanceFactory(): IPublicClientApplication {
 }
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
-  const protectedResourceMap = new Map<string, Array<string>>();
+  const protectedResourceMap = new Map<string, Array<string>> ();
   //  protectedResourceMap.set(GRAPH_ENDPOINT, ['user.read']);
 //  protectedResourceMap.set(environment.apiConfig.uri, environment.apiConfig.scopes);
 
   return {
-    interactionType: InteractionType.Redirect,
+    interactionType: InteractionType.Popup,
     protectedResourceMap,
   };
 }
 
 export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
-    interactionType: InteractionType.Redirect,
-    authRequest: {
-      //scopes: [...environment.apiConfig.scopes]
-      scopes: ['user.read'],
-    },
-    loginFailedRoute: '/login-failed'
+    interactionType: InteractionType.Popup,
+    // authRequest: {
+    //   //scopes: [...environment.apiConfig.scopes]
+    //   scopes: ['api://<Application ID>/access_as_user'],
+    // },
+    loginFailedRoute: '/'
   };  
 }

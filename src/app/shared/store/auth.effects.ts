@@ -42,7 +42,7 @@ export class AuthEffects {
               this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
                 .subscribe((response: AuthenticationResult) => {
                   this.store.dispatch(signInSetActiveAccount({payload: response.account}));
-                  this.store.dispatch(signInComplete({payload: this.userService.loadUser(response.account)}));
+                  this.store.dispatch(signInComplete({payload: this.userService.loadUserFromDatastore(response.account)}));
                   //this.authService.instance.setActiveAccount(response.account);
                 });
               } else {
@@ -50,7 +50,7 @@ export class AuthEffects {
                 this.authService.loginPopup()
                   .subscribe((response: AuthenticationResult) => {
                   this.store.dispatch(signInSetActiveAccount({payload: response.account}));
-                  this.store.dispatch(signInComplete({payload: this.userService.loadUser(response.account)}));
+                  this.store.dispatch(signInComplete({payload: this.userService.loadUserFromDatastore(response.account)}));
                   //this.authService.instance.setActiveAccount(response.account);
               });
             }
