@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    redirectUri: 'https://agreeable-beach-0cba6780f.4.azurestaticapps.net/',
+    redirectUri: 'https://www.familyflow.com/',
     msalConfig : {
       auth: {
         clientId: '86ab2bdb-345f-4a10-aaf8-ab3bdb0664b8',
