@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 import { BrowserUtils } from "@azure/msal-browser";
-import { HomeComponent } from "./features/home/home.component";
+import { LoginComponent } from "./features/login/login.component";
 import { MsalGuard } from "@azure/msal-angular";
 import { LayoutComponent } from "./shared/layout/layout.component";
 import { NoAuthGuard } from "./shared/auth/noAuth.guard";
@@ -10,7 +10,7 @@ import { AuthGuard } from "./shared/auth/auth.guard";
 export const routes: Routes = [
   { 
     path: "", 
-    component: HomeComponent, 
+    component: LoginComponent, 
     canActivate: [NoAuthGuard],
     pathMatch: 'full',
   },
