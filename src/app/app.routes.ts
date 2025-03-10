@@ -3,7 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 import { BrowserUtils } from "@azure/msal-browser";
 import { LoginComponent } from "./features/login/login.component";
 import { MsalGuard } from "@azure/msal-angular";
-import { LayoutComponent } from "./shared/layout/layout.component";
+import { LayoutComponent } from "./features/layout/layout.component";
 import { NoAuthGuard } from "./shared/auth/noAuth.guard";
 import { AuthGuard } from "./shared/auth/auth.guard";
 
