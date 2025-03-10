@@ -4,6 +4,7 @@ import { UserService } from './shared/services/user.service';
 
 @Component({
     selector: 'app-root',
+    standalone: true,
     template: '<router-outlet></router-outlet>',
     imports: [RouterModule]
 })
