@@ -8,11 +8,10 @@ import { Subject, takeUntil, tap } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'], 
-  standalone: true,
-  imports: [CommonModule, CustomMaterialModule, FlexLayoutModule]  
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css'],
+    imports: [CommonModule, CustomMaterialModule, FlexLayoutModule]
 })
 export class HomeComponent implements OnInit, OnDestroy{
   private readonly _destroying$ = new Subject<void>();

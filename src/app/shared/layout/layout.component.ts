@@ -17,9 +17,8 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'app-layout',
     templateUrl: './layout.component.html',
     styleUrls: ['./layout.component.css'],
-    standalone: true,
     imports: [CommonModule, RouterModule, FlexLayoutModule, CustomMaterialModule]
-    })
+})
 export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private _mobileQueryListener: () => void;

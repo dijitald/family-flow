@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 
 @Pipe({
-  name: 'localDate'
+    name: 'localDate',
+    standalone: false
 })
 export class LocalDatePipe implements PipeTransform {
 

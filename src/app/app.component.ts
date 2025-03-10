@@ -3,11 +3,9 @@ import { RouterModule } from '@angular/router';
 import { UserService } from './shared/services/user.service';
 
 @Component({
-  selector: 'app-root',
-  template: '<router-outlet></router-outlet>',
-  //styleUrls: ['./app.component.css'],
-  standalone: true,
-  imports: [ RouterModule ]  
+    selector: 'app-root',
+    template: '<router-outlet></router-outlet>',
+    imports: [RouterModule]
 })
 export class AppComponent implements OnInit {
 

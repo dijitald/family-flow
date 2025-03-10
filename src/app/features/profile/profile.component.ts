@@ -8,11 +8,10 @@ import { CustomMaterialModule } from '../../shared/custom-material/custom-materi
 import { User } from '../../shared/models/user.model';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'], 
-  standalone: true,
-  imports: [CommonModule, CustomMaterialModule]
+    selector: 'app-profile',
+    templateUrl: './profile.component.html',
+    styleUrls: ['./profile.component.css'],
+    imports: [CommonModule, CustomMaterialModule]
 })
 export class ProfileComponent implements OnInit {
   private readonly _destroying$ = new Subject<void>();

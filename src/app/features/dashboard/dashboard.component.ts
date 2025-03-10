@@ -10,11 +10,10 @@ import { UserService } from '../../shared/services/user.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'], 
-  standalone: true,
-  imports: [CommonModule, FlexLayoutModule, CustomMaterialModule]
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css'],
+    imports: [CommonModule, FlexLayoutModule, CustomMaterialModule]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
