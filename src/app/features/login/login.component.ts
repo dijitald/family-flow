@@ -9,11 +9,11 @@ import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css'],
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
     imports: [CommonModule, CustomMaterialModule, FlexLayoutModule]
 })
-export class HomeComponent implements OnInit, OnDestroy{
+export class LoginComponent implements OnInit, OnDestroy{
   private readonly _destroying$ = new Subject<void>();
   constructor(private userService:UserService, private router: Router) { }
 
