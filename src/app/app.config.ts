@@ -4,15 +4,11 @@ import { BrowserCacheLocation, IPublicClientApplication, InteractionType, LogLev
 import { MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalBroadcastService, MsalGuard, MsalGuardConfiguration, MsalInterceptor, MsalInterceptorConfiguration, MsalService } from '@azure/msal-angular';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppRoutingModule } from '../app/app.routes';
-import { appReducer } from '../app/shared/store/app.reducer';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, provideNoopAnimations } from '@angular/platform-browser/animations';
-import { provideStore } from '@ngrx/store';
-import { provideEffects } from '@ngrx/effects';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
-import { AuthEffects } from '../app/shared/store/auth.effects';
 import { CustomMaterialModule } from './shared/custom-material/custom-material.module';
 import { SpinnerInterceptor } from './shared/interceptors/spinner.interceptor';
 
@@ -30,8 +26,6 @@ export const appConfig: ApplicationConfig = {
     MsalService,
     MsalGuard,
     MsalBroadcastService,
-    provideStore(appReducer),
-    provideEffects(AuthEffects),
     { provide: Window, useValue: window },
     ]
 };
