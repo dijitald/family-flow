@@ -4,10 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { Subject, takeUntil } from 'rxjs';
 
-import * as fromAuth from '../../shared/store/auth.reducer';
+import * as fromAuth from '../../shared/services/auth.service';
 import { NotificationService } from '../../shared/services/notification.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
-import { UserService } from '../../shared/services/user.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -21,16 +20,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(private notificationService: NotificationService,
     private titleService: Title,
-    private userService: UserService,
+    private authService: fromAuth.AuthService,
     ) {
   }
 
   ngOnInit() {
     this.titleService.setTitle('Family Flow - Dashboard');
-    this.userService.currentUser$
+    this.authService.currentUser$
       .pipe(takeUntil(this._destroying$))
       .subscribe((user) => {
-        this.userState = user;
+        if (user) this.userState = user;
       });
 
     setTimeout(() => {

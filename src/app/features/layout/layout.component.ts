@@ -5,9 +5,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { Store } from '@ngrx/store';
 import { FlexLayoutModule } from "ngx-flexible-layout";
 
-import * as fromAuth from '../../shared/store/auth.reducer';
-import * as fromApp from '../../shared/store/app.reducer';
-import { UserService } from '../../shared/services/user.service';
+import * as fromAuth from '../../shared/services/auth.service';
 import { SpinnerService } from '../../shared/services/spinner.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
 import { Subject, takeUntil } from 'rxjs';
@@ -31,8 +29,7 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     userState: fromAuth.State;
   
     constructor(
-        private store: Store<fromApp.AppState>,
-        private userService: UserService,
+        private authService: fromAuth.AuthService,
         private changeDetectorRef: ChangeDetectorRef,
         private media: MediaMatcher,
         public spinnerService: SpinnerService,
@@ -46,17 +43,18 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
         this.isIframe = window !== window.parent && !window.opener; 
 
-        this.store.select('auth')
-            .pipe(takeUntil(this._destroying$))
-            .subscribe(authState => {
-              this.userState = authState;
-            });
+        this.authService.currentUser$
+           .pipe(takeUntil(this._destroying$))
+           .subscribe((user) => {
+                if (user) this.userState = user;
+                console.log('user', user);
+           });
     }
     logIn() {
-        this.userService.login();
+        this.authService.login();
     }
     logOut() {
-        this.userService.logout();
+        this.authService.logout();
     }
 
     ngOnDestroy(): void {

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { UserService } from '../../shared/services/user.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
     selector: 'app-home',
@@ -15,20 +15,19 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit, OnDestroy{
   private readonly _destroying$ = new Subject<void>();
-  constructor(private userService:UserService, private router: Router) { }
+  constructor(private authService:AuthService, private router: Router) { }
 
   ngOnInit() {
-    console.log('home init', this.userService.currentUser$);
-    this.userService.currentUser$
- //   .pipe(takeUntil(this._destroying$), tap((user) => console.log('user', user)))
-    .subscribe((user) => {
-      console.log('user', user);
-      this.router.navigate(['/dashboard']);
-    });
+    this.authService.currentUser$
+      .pipe(takeUntil(this._destroying$))
+      .subscribe((user) => {
+        console.log('user', user);
+        this.router.navigate(['/dashboard']);
+      });
   }
 
   logIn() {
-    this.userService.login();
+    this.authService.login();
   }
 
   ngOnDestroy(): void {
