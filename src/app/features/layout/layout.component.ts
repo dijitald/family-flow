@@ -40,11 +40,11 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mobileQuery = this.media.matchMedia('(max-width: 1000px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
         // tslint:disable-next-line: deprecation
-        this.mobileQuery.addListener(this._mobileQueryListener);
+        //this.mobileQuery.addListener(this._mobileQueryListener);
     }
 
     ngOnInit(): void {
-        this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
+        this.isIframe = window !== window.parent && !window.opener; 
 
         this.store.select('auth')
             .pipe(takeUntil(this._destroying$))
@@ -61,7 +61,7 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy(): void {
         // tslint:disable-next-line: deprecation
-        this.mobileQuery.removeListener(this._mobileQueryListener);
+        //this.mobileQuery.removeListener(this._mobileQueryListener);
         this._destroying$.next(undefined);
         this._destroying$.complete();
     }

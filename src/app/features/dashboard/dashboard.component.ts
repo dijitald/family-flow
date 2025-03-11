@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NotificationService } from '../../shared/services/notification.service';
 import { Title } from '@angular/platform-browser';
-
-import * as fromAuth from '../../shared/store/auth.reducer';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
+import { Subject, takeUntil } from 'rxjs';
+
+import * as fromAuth from '../../shared/store/auth.reducer';
+import { NotificationService } from '../../shared/services/notification.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
 import { UserService } from '../../shared/services/user.service';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
