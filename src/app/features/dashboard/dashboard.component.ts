@@ -39,14 +39,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((resp: any) => { 
         console.log(resp);
         this.message = resp;
-        setTimeout(() => {
-          this.notificationService.openSnackBar(this.message);
-        });
-          }
+      }
     );
 
     setTimeout(() => {
-      //this.notificationService.openSnackBar('Welcome!');
+      this.notificationService.openSnackBar('Welcome!');
     });
   }
 

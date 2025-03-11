@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Store } from '@ngrx/store';
 import { FlexLayoutModule } from "ngx-flexible-layout";
 
 import * as fromAuth from '../../shared/services/auth.service';
