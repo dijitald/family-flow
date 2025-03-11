@@ -25,8 +25,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private authService: fromAuth.AuthService,
     private http: HttpClient
     ) {
-      this.http.get('/api/hw')
-        .subscribe((resp: any) => this.message = resp.text);
   }
 
   ngOnInit() {
@@ -37,8 +35,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (user) this.userState = user;
       });
 
+    this.http.get('/api/hw', {responseType: 'text'})
+      .subscribe((resp: any) => { 
+        console.log(resp);
+        this.message = resp;
+        setTimeout(() => {
+          this.notificationService.openSnackBar(this.message);
+        });
+          }
+    );
+
     setTimeout(() => {
-      this.notificationService.openSnackBar('Welcome!');
+      //this.notificationService.openSnackBar('Welcome!');
     });
   }
 

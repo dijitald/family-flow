@@ -1,87 +1,30 @@
 {
-  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
   "version": "2.0.0",
   "tasks": [
-    {
-      "type": "npm",
-      "script": "start",
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
-        }
-      }
-    },
-    {
-      "type": "npm",
-      "script": "test",
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
-        }
-      }
-    },
     {
       "type": "func",
       "label": "func: host start",
       "command": "host start",
-      "problemMatcher": "$func-node-watch",
+      "problemMatcher": "$func-python-watch",
       "isBackground": true,
-      "dependsOn": "npm build (functions)",
+      "dependsOn": "pip install (functions)",
       "options": {
         "cwd": "${workspaceFolder}/api"
       }
     },
     {
+      "label": "pip install (functions)",
       "type": "shell",
-      "label": "npm build (functions)",
-      "command": "npm run build",
-      "dependsOn": "npm clean (functions)",
-      "problemMatcher": "$tsc",
-      "options": {
-        "cwd": "${workspaceFolder}/api"
-      }
-    },
-    {
-      "type": "shell",
-      "label": "npm install (functions)",
-      "command": "npm install",
-      "options": {
-        "cwd": "${workspaceFolder}/api"
-      }
-    },
-    {
-      "type": "shell",
-      "label": "npm prune (functions)",
-      "command": "npm prune --production",
-      "dependsOn": "npm build (functions)",
+      "osx": {
+        "command": "${config:azureFunctions.pythonVenv}/bin/python -m pip install -r requirements.txt"
+      },
+      "windows": {
+        "command": "${config:azureFunctions.pythonVenv}/Scripts/python -m pip install -r requirements.txt"
+      },
+      "linux": {
+        "command": "${config:azureFunctions.pythonVenv}/bin/python -m pip install -r requirements.txt"
+      },
       "problemMatcher": [],
-      "options": {
-        "cwd": "${workspaceFolder}/api"
-      }
-    },
-    {
-      "type": "shell",
-      "label": "npm clean (functions)",
-      "command": "npm run clean",
-      "dependsOn": "npm install (functions)",
       "options": {
         "cwd": "${workspaceFolder}/api"
       }
