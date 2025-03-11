@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
-export async function ffApi(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+export async function HelloWorld(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
     const name = request.query.get('name') || await request.text() || 'world';
@@ -8,8 +8,8 @@ export async function ffApi(request: HttpRequest, context: InvocationContext): P
     return { body: `Hello, ${name}!` };
 };
 
-app.http('ffApi', {
+app.http('hw', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: ffApi
+    handler: HelloWorld
 });

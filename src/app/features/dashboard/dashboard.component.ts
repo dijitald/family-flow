@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import * as fromAuth from '../../shared/services/auth.service';
 import { NotificationService } from '../../shared/services/notification.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-dashboard',
@@ -17,11 +18,15 @@ import { CustomMaterialModule } from '../../shared/custom-material/custom-materi
 export class DashboardComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
   userState: fromAuth.State;
+  message: string = '';
 
   constructor(private notificationService: NotificationService,
     private titleService: Title,
     private authService: fromAuth.AuthService,
+    private http: HttpClient
     ) {
+      this.http.get('/api/hw')
+        .subscribe((resp: any) => this.message = resp.text);
   }
 
   ngOnInit() {
