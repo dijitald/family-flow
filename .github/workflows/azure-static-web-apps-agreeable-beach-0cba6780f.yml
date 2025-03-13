@@ -32,6 +32,8 @@ jobs:
           api_location: "/api/" # Api source code path - optional
           output_location: "/dist/family-flow/browser" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+        env:
+          AZURE_SQL_CONNECTIONSTRING: ${{ secrets.AZURE_SQL_CONNECTIONSTRING }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

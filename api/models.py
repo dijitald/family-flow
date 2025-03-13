@@ -67,6 +67,6 @@ class Activity(Base):
 # Set up SQLAlchemy
 #AZURE_SQL_CONNECTIONSTRING='Driver={ODBC Driver 18 for SQL Server};Server=tcp:<database-server-name>.database.windows.net,1433;Database=<database-name>;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30'
 #DATABASE_URL = "mssql+pyodbc://username:password@server/database?driver=ODBC+Driver+17+for+SQL+Server"
-DATABASE_URL = os.environ["AZURE_SQL_CONNECTIONSTRING"]
-engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(engine)
+DATABASE_URL = os.getenv("AZURE_SQL_CONNECTIONSTRING")
+# engine = create_engine(DATABASE_URL)
+# Base.metadata.create_all(engine)

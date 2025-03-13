@@ -2,7 +2,8 @@ import azure.functions as func
 import logging
 import json
 from sqlalchemy.orm import sessionmaker
-from models import engine, Household, User, Chore, Activity
+# from models import engine, Household, User, Chore, Activity
+from models import User
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 # Session = sessionmaker(bind=engine)
