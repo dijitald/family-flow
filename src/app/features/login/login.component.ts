@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy{
   constructor(private authService:AuthService, private router: Router) { }
 
   ngOnInit() {
-    this.authService.currentUser$
+    this.authService.currentAuth$
       .pipe(takeUntil(this._destroying$))
       .subscribe((user) => {
         console.log('user', user);

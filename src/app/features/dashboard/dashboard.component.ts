@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { Subject, takeUntil } from 'rxjs';
 
-import * as fromAuth from '../../shared/services/auth.service';
+import { UserService } from '../../shared/services/user.service';
+import { User } from '../../shared/models/user.model';
 import { NotificationService } from '../../shared/services/notification.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
 import { HttpClient } from '@angular/common/http';
@@ -17,22 +18,22 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
-  userState: fromAuth.State;
+  user: User;
   message: string = '';
 
   constructor(private notificationService: NotificationService,
     private titleService: Title,
-    private authService: fromAuth.AuthService,
+    private userService: UserService,
     private http: HttpClient
     ) {
   }
 
   ngOnInit() {
     this.titleService.setTitle('Family Flow - Dashboard');
-    this.authService.currentUser$
+    this.userService.currentUser$
       .pipe(takeUntil(this._destroying$))
-      .subscribe((user) => {
-        if (user) this.userState = user;
+      .subscribe((newuser) => {
+        if (newuser) this.user = newuser;
       });
 
     this.http.get('/api/hw', {responseType: 'text'})

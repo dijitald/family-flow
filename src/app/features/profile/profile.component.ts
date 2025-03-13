@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import * as fromAuth from '../../shared/services/auth.service';
+import { UserService } from '../../shared/services/user.service';
 import { Subject, takeUntil } from 'rxjs';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
+import { User } from '../../shared/models/user.model';
 
 @Component({
     selector: 'app-profile',
@@ -13,15 +14,15 @@ import { CustomMaterialModule } from '../../shared/custom-material/custom-materi
 })
 export class ProfileComponent implements OnInit {
   private readonly _destroying$ = new Subject<void>();
-  userState: fromAuth.State; 
+  user: User; 
 
-  constructor(private authService: fromAuth.AuthService) { }
+  constructor(private userService: UserService) { }
   
   ngOnInit() {
-    this.authService.currentUser$
+    this.userService.currentUser$
       .pipe(takeUntil(this._destroying$))
-      .subscribe((user) => {
-        if (user) this.userState = user;
+      .subscribe((newuser) => {
+        if (newuser) this.user = newuser;
       });
 
   }

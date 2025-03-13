@@ -2,33 +2,26 @@ import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
 import { MsalService, MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 import { AccountInfo, AuthenticationResult, PopupRequest, RedirectRequest } from '@azure/msal-browser';
 import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
-import { User } from '../models/user.model';
-
-export interface State {
-    user: User;
-    isLoggedIn: boolean;
-    authError: string;
-    loading: boolean;
-}
-
-const initialState: State = {
-    user: null,
-    isLoggedIn: false,
-    authError: '',
-    loading: false
-}
+import { Auth } from '../models/auth.model';
 
 
 @Injectable({ providedIn: 'root'})
 export class AuthService implements OnInit, OnDestroy{
   private readonly _destroying$ = new Subject<void>();
   private usePopUp: boolean = true;
-  private _currentUser$: BehaviorSubject<State> = new BehaviorSubject({authError: '', isLoggedIn: false, user: new User('', '', '', '', '', '', new Date()), loading: false});
+  private _currentLogin$: BehaviorSubject<Auth> = new BehaviorSubject({
+      userid:'',  
+      name:'', 
+      email:'', 
+      isLoggedIn: false, 
+      authError: '', 
+      loading: false
+    });
   
   constructor(
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
- //   private msalBroadcastService: MsalBroadcastService, 
+//   private msalBroadcastService: MsalBroadcastService, 
   ) { }
 
   public ngOnInit(): void {
@@ -80,7 +73,7 @@ login() {
         this.authService.loginPopup(popUpRequest)
             .subscribe((response: AuthenticationResult) => {
                 this.setActiveAccount(response.account);
-                console.log(this._currentUser$.value);          
+                console.log("AuthService", this._currentLogin$.value);          
             });
 
         // if (this.msalGuardConfig.authRequest){
@@ -117,45 +110,16 @@ login() {
 }
 
 logout() {
-    localStorage.removeItem('userData'); 
-    this._currentUser$.next({
-        user: null,
-        isLoggedIn: false,
-        authError: '',
-        loading: false
-      });
-      if (this.usePopUp) {
+    //localStorage.removeItem('userData'); 
+    this._currentLogin$.next(undefined);
+    if (this.usePopUp) {
       this.authService.logoutPopup({ mainWindowRedirectUri: "/" });
     } else {
       this.authService.logoutRedirect();
     }
 }
-  
-  public loadUserFromDatastore(account: AccountInfo): User {
-    const id = account.homeAccountId;
-    let userData : User = JSON.parse(localStorage.getItem('userData'));
-    if (!userData) {
-      userData = new User(
-        account.homeAccountId, 
-        account.name, 
-        account.username,
-        account.username,
-        '',
-        '',
-        new Date(),
-        );
-        this.saveUserToDatastore(userData);
-      }
-      return userData;
-  }
 
-  public saveUserToDatastore(user: User): void {
-    localStorage.setItem('userData', JSON.stringify(user));
-  }
-
-  private setActiveAccount(account: AccountInfo): void {
-    let activeAccount = account;
-       
+  private setActiveAccount(activeAccount: AccountInfo): void {       
     if (activeAccount) {
       this.authService.instance.setActiveAccount(activeAccount);
     }
@@ -164,21 +128,23 @@ logout() {
       this.authService.instance.setActiveAccount(accounts[0]);
     }
     console.log('getting user data from storage');
-    this._currentUser$.next({
-        user: this.loadUserFromDatastore(account),
+    this._currentLogin$.next({
+        userid: activeAccount.homeAccountId,
+        name: activeAccount.name,
+        email: activeAccount.username,
         isLoggedIn: true,
         authError: '',
         loading: false
     });
   }
 
-  public get currentUser$(): Observable<State> {
-    return this._currentUser$.asObservable();
+  public get currentAuth$(): Observable<Auth> {
+    return this._currentLogin$.asObservable();
   }
   
   isLoggedIn(): Observable<boolean>
   {
-      if ( this._currentUser$.value.isLoggedIn )
+      if ( this._currentLogin$.value.isLoggedIn )
       {
           return of(true);
       }

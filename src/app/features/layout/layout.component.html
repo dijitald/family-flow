@@ -27,15 +27,15 @@
       </a>
     </mat-menu> -->
 
-    <button mat-raised-button (click)="logIn()" *ngIf="!userState.isLoggedIn" aria-hidden="false">
+    <button mat-raised-button (click)="logIn()" *ngIf="!user" aria-hidden="false">
       <mat-icon aria-hidden="false">person</mat-icon>
       <span fxShow fxHide.xs>Log In</span>  
     </button>
 
-    <button mat-raised-button [matMenuTriggerFor]="userMenu" *ngIf="userState.isLoggedIn" aria-hidden="false">
+    <button mat-raised-button [matMenuTriggerFor]="userMenu" *ngIf="user" aria-hidden="false">
       <mat-icon aria-hidden="false">person</mat-icon>
       <span fxShow fxHide.xs>
-        {{userState.user.name}}
+        {{user.name}}
       </span>
     </button>
     <mat-menu #userMenu="matMenu" xPosition="before" yPosition="above" [overlapTrigger]="false">

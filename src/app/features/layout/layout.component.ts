@@ -3,11 +3,12 @@ import { RouterModule } from '@angular/router';
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { FlexLayoutModule } from "ngx-flexible-layout";
+import { Subject, takeUntil } from 'rxjs';
 
-import * as fromAuth from '../../shared/services/auth.service';
+import { UserService } from '../../shared/services/user.service';
+import { User } from '../../shared/models/user.model';
 import { SpinnerService } from '../../shared/services/spinner.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
-import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -25,10 +26,10 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     isIframe = false;
     mobileQuery: MediaQueryList;
     showSpinner: boolean = false;
-    userState: fromAuth.State;
+    user: User;
   
     constructor(
-        private authService: fromAuth.AuthService,
+        private userService: UserService,
         private changeDetectorRef: ChangeDetectorRef,
         private media: MediaMatcher,
         public spinnerService: SpinnerService,
@@ -42,18 +43,17 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
         this.isIframe = window !== window.parent && !window.opener; 
 
-        this.authService.currentUser$
-           .pipe(takeUntil(this._destroying$))
-           .subscribe((user) => {
-                if (user) this.userState = user;
-                console.log('user', user);
-           });
-    }
+        this.userService.currentUser$
+        .pipe(takeUntil(this._destroying$))
+        .subscribe((newuser) => {
+          if (newuser) this.user = newuser;
+        });
+    }    
     logIn() {
-        this.authService.login();
+        this.userService.login();
     }
     logOut() {
-        this.authService.logout();
+        this.userService.logout();
     }
 
     ngOnDestroy(): void {
