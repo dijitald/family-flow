@@ -1,7 +1,7 @@
 
 export class Auth{
     constructor(
-        public userid: string,  // homeAccountId
+        public guid: string,  // homeAccountId
         public name: string,    // name
         public email: string,   // username
         public isLoggedIn: boolean,

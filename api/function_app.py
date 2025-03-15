@@ -5,7 +5,7 @@ from service_models import engine
 from function_app_context import context
 from service_households import bpHouseholds
 from service_users import bpUsers
-from service_chores import bpChores
+from service_tasks import bpTasks
 from service_activities import bpActivities
 from service_memberships import bpMembers
 
@@ -17,7 +17,7 @@ context.KEY = '38a17afd-be2d-471b-9609-fc55f7c00381'
 
 app.register_blueprint(bpHouseholds)
 app.register_blueprint(bpUsers)
-app.register_blueprint(bpChores)
+app.register_blueprint(bpTasks)
 app.register_blueprint(bpActivities)
 app.register_blueprint(bpMembers)
 

@@ -30,13 +30,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle('Family Flow - Dashboard');
+   
     this.userService.currentUser$
       .pipe(takeUntil(this._destroying$))
       .subscribe((newuser) => {
         if (newuser) this.user = newuser;
       });
 
-    this.http.get('/api/hw', {responseType: 'text'})
+    this.http.get('/api/ping', {responseType: 'text'})
       .subscribe((resp: any) => { 
         console.log(resp);
         this.message = resp;

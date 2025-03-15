@@ -5,10 +5,10 @@
         <mat-card-content *ngIf="user">
           <h2>Welcome!</h2>
             <p><strong>Id: </strong> {{user.id}}</p>
+            <p><strong>Guid: </strong> {{user.guid}}</p>
             <p><strong>Email: </strong> {{user.email}}</p>
             <p><strong>Name: </strong> {{user.name}}</p>
-            <p><strong>Household: </strong> {{user.activehousehold}}</p>
-            <p><strong>Role: </strong> {{user.role}}</p>
+            <p><strong>Household: </strong> {{user.activehousehold_id}}</p>
             <p><strong>Created: </strong> {{user.createdOn}}</p>
         </mat-card-content>
     </mat-card>

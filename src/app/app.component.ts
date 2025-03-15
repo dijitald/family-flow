@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './shared/services/auth.service';
+import { UserService } from './shared/services/user.service';
 
 @Component({
     selector: 'app-root',
@@ -9,10 +10,11 @@ import { AuthService } from './shared/services/auth.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private authService: AuthService) {  }
+  constructor(private authService: AuthService, private userService: UserService) {  }
 
   ngOnInit() {
     this.authService.ngOnInit(); // hack: start this service to get the user's info
+    this.userService.ngOnInit(); // hack: start this service to get the user's info
   }
 
 }

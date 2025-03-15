@@ -1,14 +1,14 @@
-import { Chore } from "./chore.model";
-import { Transaction } from "./transaction.model";
+import { Task } from "./task.model";
+import { Activity } from "./activity.model";
+import { User } from "./user.model";
 
 export class Household {
     constructor(
         public id: string,
-        public members: string[], 
-        public chores: Chore[],
+        public name: string,
         public createdOn: Date,
-        public createdBy: string,
-        public categories: string[], //categories to be tracked (chore, gift, shopping, amazon, etc)
-        public transactions: Transaction[],
+        public users: User[], 
+        public tasks: Task[],
+        public activities: Activity[],
         ) {}
 }

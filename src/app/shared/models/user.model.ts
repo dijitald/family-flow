@@ -1,15 +1,18 @@
-
+import { Activity } from "./activity.model";
+import { Membership } from "./membership.model";
 
 export class User{
 
     constructor(
         public id: string,
-        public name: string,
+        public guid: string, //liveid
         public email: string,
-        public activehousehold: string,
-        public role: string, // admin, member
+        public name: string,
         public createdOn: Date,
- //       public image: ImageData,
- //       public households: string[],
+        public lastLogin: Date,
+        public avatarPath: string,
+        public activehousehold_id: string,
+        public households?: Membership[],
+        public activities?: Activity
     ){}
 }

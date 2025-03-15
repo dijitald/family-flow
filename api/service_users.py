@@ -10,20 +10,18 @@ bpUsers = func.Blueprint()
 def user_service(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('User service called')
 
-    try:
-        user_data = req.get_json()
-    except ValueError:
-        return func.HttpResponse("Invalid User Data", status_code=400)
-    else:
-        guid = user_data.get('userid') # msft live id
-        name = user_data.get('name')
-        email = user_data.get('email')
-        avatarPath = user_data.get('avatarPath')
-        activehousehold_id = user_data.get('activehousehold_id')
-
-    logging.info('user_data : %s', user_data)
-
     if req.method == 'GET':
+        try:
+            logging.info('headers : %s', json.dumps(req.headers.values.__dict__, default=str))   
+            guid = req.headers.get('guid')
+            email = req.headers.get('email')
+            name = req.headers.get('name')
+            if not guid or not email or not name:
+                raise ValueError()
+        except ValueError:
+            logging.info('Invalid User Data')
+            return func.HttpResponse("Invalid User Data", status_code=400)
+
         if guid == context.KEY:
             logging.info('getting ALL users')
             users = context.session.query(User).all()
@@ -45,8 +43,20 @@ def user_service(req: func.HttpRequest) -> func.HttpResponse:
                 return func.HttpResponse(output, mimetype="application/json")
 
     elif req.method == 'POST':
-        logging.info('updating user')
-        user = context.session.query(User).filter(User.guid == guid).first()
+        try:
+            user_data = req.get_json()
+        except ValueError:
+            return func.HttpResponse("Invalid User Data", status_code=400)
+        else:
+            id = user_data.get('id')
+            guid = user_data.get('guid') # msft live id
+            name = user_data.get('name')
+            email = user_data.get('email')
+            avatarPath = user_data.get('avatarPath')
+            activehousehold_id = user_data.get('activehousehold_id')
+        logging.info('updating user data : %s', user_data)
+
+        user = context.session.query(User).filter(User.id == id).first()
         if not user:
             return func.HttpResponse("User Not Found", status_code=404)
         else:

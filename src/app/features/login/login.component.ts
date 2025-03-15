@@ -5,7 +5,7 @@ import { CustomMaterialModule } from '../../shared/custom-material/custom-materi
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from '../../shared/services/auth.service';
+import { UserService } from '../../shared/services/user.service';
 
 @Component({
     selector: 'app-home',
@@ -15,19 +15,20 @@ import { AuthService } from '../../shared/services/auth.service';
 })
 export class LoginComponent implements OnInit, OnDestroy{
   private readonly _destroying$ = new Subject<void>();
-  constructor(private authService:AuthService, private router: Router) { }
+  constructor(private userService:UserService, private router: Router) { }
 
   ngOnInit() {
-    this.authService.currentAuth$
+    this.userService.currentUser$
       .pipe(takeUntil(this._destroying$))
       .subscribe((user) => {
-        console.log('user', user);
-        this.router.navigate(['/dashboard']);
+        console.log('logged in user', user);
+        if (user)
+          this.router.navigate(['/dashboard']);
       });
   }
 
   logIn() {
-    this.authService.login();
+    this.userService.login();
   }
 
   ngOnDestroy(): void {

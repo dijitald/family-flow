@@ -1,11 +1,11 @@
 import azure.functions as func
 import logging, json
-from service_models import Chore
+from service_models import Task
 from function_app_context import context
 
-bpChores = func.Blueprint()
+bpTasks = func.Blueprint()
 
-@bpChores.route(route="chores", methods=['GET'])
+@bpTasks.route(route="chores", methods=['GET'])
 def chore_service(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('get_chores called')
     return func.HttpResponse("Hello, chores!", status_code=200)

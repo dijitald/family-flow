@@ -15,7 +15,7 @@ def membership_service(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse("Invalid Membership Data", status_code=400)
     else:
         household_id = membership_data.get('household_id')
-        user_guid = membership_data.get('user_id')
+        user_id = membership_data.get('user_id')
         balance = membership_data.get('balance')
         role = membership_data.get('role')
     logging.info('user_data : %s', membership_data)
@@ -37,11 +37,6 @@ def membership_service(req: func.HttpRequest) -> func.HttpResponse:
 
     elif req.method == 'POST':
         logging.info('creating/updating membership')
-        user = context.session.query(User).filter(User.guid == user_guid).first()
-        if user:
-            user_id = user.id
-        else:
-            return func.HttpResponse("User Not Found", status=404)
         membership = context.session.query(HouseholdMembership).filter(HouseholdMembership.household_id == idHome and HouseholdMembership.user_id == user_id).first()
         if membership:
             membership.balance = balance

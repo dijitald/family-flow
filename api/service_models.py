@@ -24,7 +24,7 @@ class Household(Base):
     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
     users: Mapped[list["HouseholdMembership"]] = relationship("HouseholdMembership", back_populates="household")
-    chores: Mapped[list["Chore"]] = relationship("Chore", back_populates="household")
+    tasks: Mapped[list["Task"]] = relationship("Task", back_populates="household")
     activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="household")
 
 class User(Base):
@@ -51,10 +51,10 @@ class HouseholdMembership(Base):
     balance: Mapped[float] = mapped_column(FLOAT, default=0)
     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
 
-class Chore(Base):
-    __tablename__ = 'chores'
+class Task(Base):
+    __tablename__ = 'tasks'
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
-    household: Mapped[Household] = relationship("Household", back_populates="chores")
+    household: Mapped[Household] = relationship("Household", back_populates="tasks")
     household_id: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
     description: Mapped[str] = mapped_column(NVARCHAR, nullable=True)

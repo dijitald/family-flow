@@ -1,19 +1,19 @@
+import { Household } from "./household.model";
 
-export class Chore {
+export class Task {
 
     constructor(
-        public id: string, 
+        public id: number,
+        public household: Household,
+        public householdId: string, 
         public name: string, 
         public description: string,
         public active: boolean,
         public rewardAmount: number,
         public lastCompleted: Date,
         public nextDueDate : Date,
-
         public createdOn: Date,
         public createdBy: string,
-        public modifiedOn: Date,
-        public modifiedBy: string,
 
         public frequency: string, // Daily, Weekly, Monthly, Yearly
         public everyWeekday: boolean, //[daily]
