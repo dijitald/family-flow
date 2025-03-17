@@ -1,13 +1,64 @@
-import os
+import os, uuid, json
+from datetime import datetime
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, relationship, mapped_column, Mapped
 from sqlalchemy.dialects.mssql import (DATETIME2, FLOAT, INTEGER, NVARCHAR, UNIQUEIDENTIFIER, BIT, JSON)
-from datetime import datetime
-import uuid
 
 class Base(DeclarativeBase):
-    def to_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    def to_dict(self, visited=None, depth=1):
+        if visited is None:
+            visited = set()
+
+        if self in visited:
+            return None
+
+        visited.add(self)
+
+        result = {}
+        for c in self.__table__.columns:
+            value = getattr(self, c.name)
+            if isinstance(value, uuid.UUID):
+                result[c.name] = str(value)
+            else:
+                result[c.name] = value
+
+        if depth > 0:
+            for rel in self.__mapper__.relationships:
+                related_obj = getattr(self, rel.key)
+                if related_obj is not None:
+                    if isinstance(related_obj, list):
+                        result[rel.key] = [item.to_dict(visited, depth - 1) for item in related_obj]
+                    else:
+                        result[rel.key] = related_obj.to_dict(visited, depth - 1)
+        return result
+
+
+    # def to_dict(self, visited=None):
+        # if visited is None:
+        #     visited = set()
+
+        # if self in visited:
+        #     return None
+
+        # visited.add(self)
+
+        # result = {}
+        # for c in self.__table__.columns:
+        #     value = getattr(self, c.name)
+        #     if isinstance(value, uuid.UUID):
+        #         result[c.name] = str(value)
+        #     else:
+        #         result[c.name] = value
+
+        # for rel in self.__mapper__.relationships:
+        #     related_obj = getattr(self, rel.key)
+        #     if related_obj is not None:
+        #         if isinstance(related_obj, list):
+        #             result[rel.key] = [item.to_dict(visited) for item in related_obj]
+        #         else:
+        #             result[rel.key] = related_obj.to_dict(visited)
+        # return result
+    
     # def to_dict(self):
     #     result = {}
     #     for c in self.__table__.columns:
@@ -16,7 +67,39 @@ class Base(DeclarativeBase):
     #             result[c.name] = str(value)
     #         else:
     #             result[c.name] = value
+
+    #     for rel in self.__mapper__.relationships:
+    #         related_obj = getattr(self, rel.key)
+    #         if related_obj is not None:
+    #             if isinstance(related_obj, list):
+    #                 result[rel.key] = [item.to_dict() for item in related_obj]
+    #             else:
+    #                 result[rel.key] = related_obj.to_dict()
     #     return result
+
+    # def to_dict(self):
+    # return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    # def to_dict(self):
+    #     if isinstance(self, list):
+    #         return [item.to_dict() for item in self]
+    #     elif isinstance(self, dict):
+    #         return {key: value.to_dict() for key, value in self.items()}
+    #     elif hasattr(self, '__dict__'):
+    #         data = {}
+    #         for key, value in self.__dict__.items():
+    #             if key.startswith('_'):
+    #                 continue
+    #             if isinstance(value, list):
+    #                 data[key] = [item.to_dict() for item in value]
+    #             else:
+    #                 data[key] = value.to_dict() if hasattr(value, 'to_dict') else value
+    #         return data
+    #     else:
+    #         return self
+    # def serialize(self):
+    #     return json.dumps(self.to_dict(), default=str)
+
 
 class Household(Base):
     __tablename__ = 'households'
@@ -32,11 +115,12 @@ class User(Base):
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
     guid: Mapped[str] = mapped_column(NVARCHAR, nullable=False)  # liveid uuid.tenantid
     email: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
+    sms: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False, default='New User')
     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
     lastLogon: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
     avatarPath: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
-    activehousehold_id: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'), nullable=True)
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'), nullable=True)
     households: Mapped[list["HouseholdMembership"]] = relationship("HouseholdMembership", back_populates="user")
     activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="user")
 

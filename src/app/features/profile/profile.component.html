@@ -1,17 +1,81 @@
-
 <div class="container" fxLayout="row" fxLayoutAlign="center none">
-    <div fxFlex="95%">
-      <mat-card appearance="outlined">
-        <mat-card-content *ngIf="user">
-          <h2>Welcome!</h2>
+  <div fxFlex="90%">
+    <div class="container" fxLayout="row" fxLayoutAlign="center none">
+      <div fxFlex="95%">
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Profile</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Here you can see your profile information.</p>
+            <p *ngIf="!user.lastLogon">It looks like you're new here, Welcome! Let's make sure everything is setup correctly</p>
+          </mat-card-content>
+        </mat-card>
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+              <div fxLayout="row" fxLayoutGap="10px">
+                <mat-form-field appearance="fill" fxFlex="30%">
+                  <mat-label>Email</mat-label>
+                  <input matInput formControlName="email">
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutGap="10px">
+                <mat-form-field appearance="fill" fxFlex="30%">
+                  <mat-label>Name</mat-label>
+                  <input matInput formControlName="name">
+                </mat-form-field>
+              </div>
+              <div fxLayout="row" fxLayoutGap="10px">
+                <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.pristine">Save</button>
+                <button mat-raised-button color="warn" type="button" [disabled]="profileForm.pristine" (click)="onCancel()">Cancel</button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-card-title>Households</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="householdMemberships && householdMemberships.length > 0">
+              <p>Households you are a member of:</p>
+              <ul>
+                <li *ngFor="let household of householdMemberships">
+                  {{household.household.name}} (ID: {{household.id}})
+                </li>
+              </ul>
+            </div>
+            <div *ngIf="!householdMemberships || householdMemberships.length === 0">
+              <p>You are not a member of any households.</p>
+            </div>
+            <form [formGroup]="householdForm" (ngSubmit)="onCreateHousehold()">
+              <mat-form-field appearance="fill">
+                <mat-label>New Household Name</mat-label>
+                <input matInput formControlName="newHouseholdName">
+              </mat-form-field>
+              <button mat-raised-button color="primary" type="submit">Create Household</button>
+            </form>
+            <form [formGroup]="joinHouseholdForm" (ngSubmit)="onJoinHousehold()">
+              <mat-form-field appearance="fill">
+                <mat-label>Household ID</mat-label>
+                <input matInput formControlName="householdId">
+              </mat-form-field>
+              <button mat-raised-button color="primary" type="submit">Join Household</button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+        <mat-card appearance="outlined" *ngIf="debug">
+          <mat-card-content *ngIf="user">
             <p><strong>Id: </strong> {{user.id}}</p>
             <p><strong>Guid: </strong> {{user.guid}}</p>
             <p><strong>Email: </strong> {{user.email}}</p>
             <p><strong>Name: </strong> {{user.name}}</p>
-            <p><strong>Household: </strong> {{user.activehousehold_id}}</p>
+            <p><strong>Household: </strong> {{user.householdid}}</p>
             <p><strong>Created: </strong> {{user.createdOn}}</p>
-        </mat-card-content>
-    </mat-card>
-
-</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
 </div>

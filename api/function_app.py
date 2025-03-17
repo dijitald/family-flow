@@ -1,5 +1,5 @@
 import azure.functions as func
-import logging
+import logging, os
 from sqlalchemy.orm import sessionmaker
 from service_models import engine
 from function_app_context import context
@@ -13,7 +13,7 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 factory = sessionmaker(bind=engine)
 session = factory()
 context.session = session
-context.KEY = '38a17afd-be2d-471b-9609-fc55f7c00381'
+context.KEY = os.getenv("DEBUGKEY")
 
 app.register_blueprint(bpHouseholds)
 app.register_blueprint(bpUsers)

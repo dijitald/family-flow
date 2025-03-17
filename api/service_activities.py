@@ -5,7 +5,7 @@ from function_app_context import context
 
 bpActivities = func.Blueprint()
 
-@bpActivities.route(route="activities", methods=['GET'])
+@bpActivities.route(route="activities", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def activity_service(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('get_activities called')
     return func.HttpResponse("Hello, activities!", status_code=200)

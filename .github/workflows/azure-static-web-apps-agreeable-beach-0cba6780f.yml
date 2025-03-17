@@ -34,6 +34,7 @@ jobs:
           ###### End of Repository/Build Configurations ######
         env:
           DATABASE_CONNECTIONSTRING: ${{ secrets.DATABASE_CONNECTIONSTRING }}
+          DEBUGKEY: ${{ secrets.DEBUGKEY }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

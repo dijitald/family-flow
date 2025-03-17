@@ -1,0 +1,21 @@
+DROP TABLE [dbo].[tasks]
+DROP TABLE [dbo].[activities]
+DROP TABLE [dbo].[memberships]
+DROP TABLE [dbo].[households]
+--- DROP TABLE [dbo].[users]
+
+
+-- DELETE from dbo.activities
+-- DELETE from dbo.tasks
+-- DELETE from dbo.memberships
+-- DELETE from dbo.households
+-- --- DELETE from dbo.users
+
+
+-- update [dbo].[users] set [lastLogon] = null where id = 1
+-- select * from [dbo].[users] where id = 1
+
+select * from [dbo].[users] 
+select * from [dbo].[households]
+select * from [dbo].[memberships]
+

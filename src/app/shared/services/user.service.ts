@@ -5,6 +5,7 @@ import * as fromAuth from './auth.service';
 import { Auth } from '../models/auth.model';
 import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
+import { MewmbershipService } from './membership.service';
 
 @Injectable({ providedIn: 'root'})
 export class UserService implements OnInit, OnDestroy{
@@ -13,6 +14,7 @@ export class UserService implements OnInit, OnDestroy{
 
   constructor (
     private authService: fromAuth.AuthService,
+    // private membershipService: MewmbershipService,
     private http: HttpClient,
   ) { }
 
@@ -23,54 +25,69 @@ export class UserService implements OnInit, OnDestroy{
        .pipe(takeUntil(this._destroying$))
        .subscribe((auth) => {
            if (auth && auth.guid && auth.email && auth.name) {
-            this.loadUser(auth);
+            this.getUser(auth);
            }
        });
+
+    // this.membershipService.household$
+    //   .pipe(takeUntil(this._destroying$))
+    //   .subscribe((household) => {
+    //     console.log('membershipService.household$', household);
+    //     if (household)
+    //       this._currentUser$.value.household = household;
+    //   }
+    // );
+       
   }  
-
-  public loadUser(auth: Auth): void {
-    console.log('loadUser', auth);
-    let user : User = JSON.parse(localStorage.getItem('userData'));
-    if (user) {
-      console.log(user);
-      this._currentUser$.next(user);
-    } else if (!user) {
-      console.log('loading user from service', auth);
-
-      this.http.get<User>('/api/users', {
-        headers : {
-          "guid" : auth.guid,
-          "email" : auth.email,
-          "name" : auth.name,
-        }, 
-        responseType: 'json',
-      })
-      .subscribe({
-        next: (user: User) => {
-          console.log(user);
-          this.saveUserLocally(user);
-          this._currentUser$.next(user);
-        },
-        error: err => {
-          console.error('Failed to get user:', err);          
-        }
-      });
-    }
-  }
-
-  public saveUserLocally(user: User): void {
-    localStorage.setItem('userData', JSON.stringify(user));
-  }
 
   public get currentUser$(): Observable<User> {
     return this._currentUser$.asObservable();
   }
   
+  public getUser(auth: Auth): void {
+    console.log('getUser', auth);
+
+    this.http.get<User>('/api/users', {
+      headers : {
+        "guid" : auth.guid,
+        "email" : auth.email,
+        "name" : auth.name,
+      }, 
+      responseType: 'json',
+    })
+    .subscribe({
+      next: (user: User) => {
+        console.log("user loaded", user);
+        if (user)
+          this._currentUser$.next(user);
+      },
+      error: err => {
+        console.error('Failed to get user:', err);          
+      }
+    });
+  }
+
+  public updateUser(user: User): void {
+    console.log('updateUser', user);
+    this.http.put<User>('/api/users', user, {responseType: 'json'})
+      .subscribe({
+        next: (user: User) => {
+          if (user)
+            this._currentUser$.next(user);
+          else
+            console.error('updateUser', 'empty response');
+        },
+        error: err => {
+          console.error('Failed to update user:', err);
+        }
+      });
+    }
+
   public login(): void {
     this.authService.login();
   }
+  
   public logout(): void {
-    localStorage.removeItem('userData'); 
     this.authService.logout();
   }
 

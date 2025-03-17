@@ -16,13 +16,15 @@ import { UserService } from '../../shared/services/user.service';
 export class LoginComponent implements OnInit, OnDestroy{
   private readonly _destroying$ = new Subject<void>();
   constructor(private userService:UserService, private router: Router) { }
-
+  
   ngOnInit() {
     this.userService.currentUser$
       .pipe(takeUntil(this._destroying$))
       .subscribe((user) => {
-        console.log('logged in user', user);
+        console.log('userService.currentUser$', user);
         if (user)
+          if (!user.lastLogon)
+            this.router.navigate(['/profile']);
           this.router.navigate(['/dashboard']);
       });
   }
