@@ -5,35 +5,68 @@ from sqlalchemy.orm import DeclarativeBase, relationship, mapped_column, Mapped
 from sqlalchemy.dialects.mssql import (DATETIME2, FLOAT, INTEGER, NVARCHAR, UNIQUEIDENTIFIER, BIT, JSON)
 
 class Base(DeclarativeBase):
-    def to_dict(self, visited=None, depth=1):
-        if visited is None:
-            visited = set()
-
-        if self in visited:
-            return None
-
-        visited.add(self)
-
-        result = {}
-        for c in self.__table__.columns:
-            value = getattr(self, c.name)
-            if isinstance(value, uuid.UUID):
-                result[c.name] = str(value)
-            else:
-                result[c.name] = value
+    def to_dict(self, depth=1):
+        result = {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
         if depth > 0:
             for rel in self.__mapper__.relationships:
                 related_obj = getattr(self, rel.key)
                 if related_obj is not None:
                     if isinstance(related_obj, list):
-                        result[rel.key] = [item.to_dict(visited, depth - 1) for item in related_obj]
+                        result[rel.key] = [item.to_dict(depth - 1) for item in related_obj]
                     else:
-                        result[rel.key] = related_obj.to_dict(visited, depth - 1)
+                        result[rel.key] = related_obj.to_dict(depth - 1)
         return result
 
+    # def to_dict(self, visited=None, depth=1):
 
-    # def to_dict(self, visited=None):
+    #     if visited is None:
+    #         visited = set()
+    #     if self in visited:
+    #         return None
+    #     visited.add(self)
+
+    #     result = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    #     if depth > 0:
+    #         for rel in self.__mapper__.relationships:
+    #             related_obj = getattr(self, rel.key)
+    #             if related_obj is not None:
+    #                 if isinstance(related_obj, list):
+    #                     result[rel.key] = [item.to_dict(visited, depth - 1) for item in related_obj]
+    #                 else:
+    #                     result[rel.key] = related_obj.to_dict(visited, depth - 1)
+    #     return result
+
+    # def to_dict(self, visited=None, depth=1):   #works, but let's see if we can make it faster
+    #     if visited is None:
+    #         visited = set()
+
+    #     if self in visited:
+    #         return None
+
+    #     visited.add(self)
+
+    #     result = {}
+    #     for c in self.__table__.columns:
+    #         value = getattr(self, c.name)
+    #         if isinstance(value, uuid.UUID):
+    #             result[c.name] = str(value)
+    #         else:
+    #             result[c.name] = value
+
+    #     if depth > 0:
+    #         for rel in self.__mapper__.relationships:
+    #             related_obj = getattr(self, rel.key)
+    #             if related_obj is not None:
+    #                 if isinstance(related_obj, list):
+    #                     result[rel.key] = [item.to_dict(visited, depth - 1) for item in related_obj]
+    #                 else:
+    #                     result[rel.key] = related_obj.to_dict(visited, depth - 1)
+    #     return result
+
+
+    # def to_dict(self, visited=None):      #this one takes a while to complete but walks the entire stack. stops when it revisits a datatype and sets that value to null
         # if visited is None:
         #     visited = set()
 
@@ -59,28 +92,10 @@ class Base(DeclarativeBase):
         #             result[rel.key] = related_obj.to_dict(visited)
         # return result
     
-    # def to_dict(self):
-    #     result = {}
-    #     for c in self.__table__.columns:
-    #         value = getattr(self, c.name)
-    #         if isinstance(value, uuid.UUID):
-    #             result[c.name] = str(value)
-    #         else:
-    #             result[c.name] = value
-
-    #     for rel in self.__mapper__.relationships:
-    #         related_obj = getattr(self, rel.key)
-    #         if related_obj is not None:
-    #             if isinstance(related_obj, list):
-    #                 result[rel.key] = [item.to_dict() for item in related_obj]
-    #             else:
-    #                 result[rel.key] = related_obj.to_dict()
-    #     return result
-
-    # def to_dict(self):
+    # def to_dict(self):                #this one is the fastest, but only goes one level deep
     # return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-    # def to_dict(self):
+    # def to_dict(self):                #doesn't get child objects
     #     if isinstance(self, list):
     #         return [item.to_dict() for item in self]
     #     elif isinstance(self, dict):
