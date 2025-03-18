@@ -146,3 +146,63 @@ p .mat-icon {
     opacity: 1;
   }
 }
+
+
+/* 
+custom styles */
+
+
+mat-form-field.ddLargeInput
+{
+  width: 300px;
+  margin: 20px;
+}
+
+li.ddHouseholdItem
+{
+  width: 300px;
+  list-style-type: none;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* li.ddHouseholdItem button
+{
+  width: 25px;
+  float: right
+} */
+
+.ddHouseholdItem.active
+{
+  background-color: #a8f000;
+}
+
+.household-item-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.delete-button {
+  width: 30px;
+  margin-left: auto;
+}
+button.ddButton_Profile
+{
+  width: 150px;
+  margin: 15px;
+}
+button.ddButton_Household
+{
+  width: 150px;
+  margin: 15px;
+}
+div.ddFormButtonGroup
+{
+  padding: 10px;
+}

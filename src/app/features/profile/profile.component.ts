@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { CurrencyPipe } from '@angular/common';
 
 import { UserService } from '../../shared/services/user.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -10,28 +11,29 @@ import { User } from '../../shared/models/user.model';
 import { HouseholdService } from '../../shared/services/household.service';
 import { MewmbershipService } from '../../shared/services/membership.service';
 import { Membership } from '../../shared/models/membership.model';
+import { FlexLayoutModule } from 'ngx-flexible-layout';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  imports: [CommonModule, CustomMaterialModule, ReactiveFormsModule]
+  imports: [CommonModule, CustomMaterialModule, ReactiveFormsModule, FlexLayoutModule],
+  providers: [CurrencyPipe]
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
   user: User;
-  householdMemberships: Membership[];
   profileForm: FormGroup;
   householdForm: FormGroup;
   joinHouseholdForm: FormGroup;
-  debug: boolean = true;
+  debug: boolean = false;
 
   constructor(
     private userService: UserService,
     private householdService: HouseholdService,
-    private membershipService: MewmbershipService,
     private route: ActivatedRoute,
-    private fb: FormBuilder 
+    private fb: FormBuilder,
+    private currencyPipe: CurrencyPipe 
   ) { }
 
   ngOnInit() {
@@ -48,14 +50,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
             name: newuser.name
           });
           this.profileForm.markAsPristine();
-        }
-      });
-    this.membershipService.households
-      .pipe(takeUntil(this._destroying$))
-      .subscribe((memberships) => {
-        console.log('membershipService.households', memberships);
-        if (memberships && memberships.length > 0) {
-          this.householdMemberships = memberships;
         }
       });
     this.route.queryParams
@@ -75,15 +69,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   initForms() {
     this.profileForm = this.fb.group({
       email: ['', [Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]],
-      name: ['']
+      name: ['', [Validators.required]]
     });
 
     this.householdForm = this.fb.group({
-      newHouseholdName: ['']
+      newHouseholdName: ['', [Validators.required]]
     });
 
     this.joinHouseholdForm = this.fb.group({
-      householdId: ['', [Validators.pattern('^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$')]]
+      householdId: ['', [Validators.required, Validators.pattern('^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$')]]
     });
   }
 
@@ -108,12 +102,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onCreateHousehold() {
     if (this.householdForm.valid) {
-      const newHouseholdName = this.householdForm.get('newHouseholdName').value;
-      this.householdService.create_household(newHouseholdName).subscribe({
+      const newHouseholdName = this.householdForm.get('newHouseholdName');
+      this.householdService.create_household(newHouseholdName.value).subscribe({
         next: (household) => {
           console.log('household added [%s : %s]', household.id, household.name);
           this.add_membership(household.id, this.user.id);
           this.householdForm.reset();
+          newHouseholdName.setErrors(null);
         },
         error: (error) => {
           console.error('Failed to create household:', error);
@@ -124,18 +119,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onJoinHousehold() {
     if (this.joinHouseholdForm.valid) {
-      const householdId = this.joinHouseholdForm.get('householdId').value;      
-      this.add_membership(householdId, this.user.id);
+      const householdId = this.joinHouseholdForm.get('householdId');      
+      this.add_membership(householdId.value, this.user.id);
       this.joinHouseholdForm.reset();
+      householdId.setErrors(null);
     }
   }
 
-  private add_membership(hid: string, uid : string) {
+  add_membership(hid: string, uid : string) {
     if (!hid || !uid) {
       console.error('Invalid household or user id');
       return;
     }
-    this.membershipService.addMembership(hid, uid).subscribe({
+    this.userService.addMembership(hid, uid).subscribe({
       next: (membership) => {
         if (membership) {
           console.log('membership added');
@@ -147,6 +143,39 @@ export class ProfileComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Failed to add membership:', error);
+      }
+    });
+  }
+
+  onActivateMembership(member: Membership) {
+    console.log('onActivateMembership', member);
+    if (!member || !member.householdid) {
+      console.error('Invalid household or user id');
+      return;
+    }
+    this.user.householdid = member.householdid;
+    this.userService.updateUser(this.user);
+    console.log('membership activated');
+  }
+
+  onDeleteMembership(member: Membership, event: Event) {
+    console.log('onDeleteMembership', member);
+    //cancel click event so parent doesn't get it
+
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    if (!member || !member.householdid) {
+      console.error('Invalid household or user id');
+      return;
+    }
+    this.userService.deleteMembership(this.user.households.find(m => m.householdid === member.householdid)).subscribe({
+      next: () => {
+        console.log('membership deleted');
+      },
+      error: (error) => {
+        console.error('Failed to delete membership:', error);
       }
     });
   }

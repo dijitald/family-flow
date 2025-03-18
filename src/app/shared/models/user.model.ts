@@ -13,6 +13,6 @@ export class User{
         public lastLogon: Date,
         public avatarPath: string,
         public householdid: string,
-        public household?: Membership,
+        public households?: Membership[],
     ){}
 }

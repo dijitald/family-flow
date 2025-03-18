@@ -1,81 +1,94 @@
-<div class="container" fxLayout="row" fxLayoutAlign="center none">
-  <div fxFlex="90%">
-    <div class="container" fxLayout="row" fxLayoutAlign="center none">
-      <div fxFlex="95%">
-        <mat-card appearance="outlined">
-          <mat-card-header>
-            <mat-card-title>Profile</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>Here you can see your profile information.</p>
-            <p *ngIf="!user.lastLogon">It looks like you're new here, Welcome! Let's make sure everything is setup correctly</p>
-          </mat-card-content>
-        </mat-card>
-        <mat-card appearance="outlined">
-          <mat-card-content>
-            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-              <div fxLayout="row" fxLayoutGap="10px">
-                <mat-form-field appearance="fill" fxFlex="30%">
-                  <mat-label>Email</mat-label>
-                  <input matInput formControlName="email">
-                </mat-form-field>
+<div class="container">
+  <div class="flex-container" fxLayout="row" fxLayoutAlign="start stretch" style="margin-bottom: 10px;">
+    <mat-card appearance="outlined" style="width: 100%;">
+      <mat-card-header><mat-card-title>Profile</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <p *ngIf="!user.lastLogon">It looks like you're new here, Welcome! Let's make sure everything is setup correctly</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="flex-container" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start space-evenly" style="margin-bottom: 10px;">
+    <mat-card appearance="outlined" style="width: 100%;">
+      <mat-card-content>
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <mat-form-field class="ddLargeInput" appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+          </mat-form-field>
+
+          <mat-form-field class="ddLargeInput" appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+          <button class="ddButton_Profile" mat-raised-button color="primary" type="submit" [disabled]="profileForm.pristine">Save</button>
+          <button class="ddButton_Profile" mat-raised-button color="warn" type="button" [disabled]="profileForm.pristine" (click)="onCancel()">Cancel</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="flex-container" fxLayout="row" fxLayout.xs="column"  fxLayoutAlign="start stretch">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Household Memberships</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="user.households && user.households.length > 0">
+          <p>Click name to set as your <span class="ddHouseholdItem active">active</span> household</p>
+          <ul>
+            <li class="ddHouseholdItem" *ngFor="let household of user.households" [ngClass]="{'active': household.householdid === user.householdid}" (click)="onActivateMembership(household)">
+              <div class="household-item-content">
+                {{household.household.name}} [balance: {{household.balance | currency}}]<br>
+                <span *ngIf="debug" style="font-size: 8px;">{{household.householdid}}</span>
+                <button mat-raised-button *ngIf="household.householdid != user.householdid" color="primary" type="button" class="delete-button" (click)="onDeleteMembership(household, $event)"><mat-icon>delete</mat-icon></button>
               </div>
-              <div fxLayout="row" fxLayoutGap="10px">
-                <mat-form-field appearance="fill" fxFlex="30%">
-                  <mat-label>Name</mat-label>
-                  <input matInput formControlName="name">
-                </mat-form-field>
-              </div>
-              <div fxLayout="row" fxLayoutGap="10px">
-                <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.pristine">Save</button>
-                <button mat-raised-button color="warn" type="button" [disabled]="profileForm.pristine" (click)="onCancel()">Cancel</button>
-              </div>
-            </form>
-          </mat-card-content>
-        </mat-card>
-        <mat-card appearance="outlined">
-          <mat-card-header>
-            <mat-card-title>Households</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div *ngIf="householdMemberships && householdMemberships.length > 0">
-              <p>Households you are a member of:</p>
-              <ul>
-                <li *ngFor="let household of householdMemberships">
-                  {{household.household.name}} (ID: {{household.id}})
-                </li>
-              </ul>
-            </div>
-            <div *ngIf="!householdMemberships || householdMemberships.length === 0">
-              <p>You are not a member of any households.</p>
-            </div>
-            <form [formGroup]="householdForm" (ngSubmit)="onCreateHousehold()">
-              <mat-form-field appearance="fill">
-                <mat-label>New Household Name</mat-label>
-                <input matInput formControlName="newHouseholdName">
-              </mat-form-field>
-              <button mat-raised-button color="primary" type="submit">Create Household</button>
-            </form>
-            <form [formGroup]="joinHouseholdForm" (ngSubmit)="onJoinHousehold()">
-              <mat-form-field appearance="fill">
-                <mat-label>Household ID</mat-label>
-                <input matInput formControlName="householdId">
-              </mat-form-field>
-              <button mat-raised-button color="primary" type="submit">Join Household</button>
-            </form>
-          </mat-card-content>
-        </mat-card>
-        <mat-card appearance="outlined" *ngIf="debug">
-          <mat-card-content *ngIf="user">
-            <p><strong>Id: </strong> {{user.id}}</p>
-            <p><strong>Guid: </strong> {{user.guid}}</p>
-            <p><strong>Email: </strong> {{user.email}}</p>
-            <p><strong>Name: </strong> {{user.name}}</p>
-            <p><strong>Household: </strong> {{user.householdid}}</p>
-            <p><strong>Created: </strong> {{user.createdOn}}</p>
-          </mat-card-content>
-        </mat-card>
-      </div>
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="!user.households || user.households.length === 0">
+          <p>You are not a member of any households.</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card appearance="outlined" style="width: 100%;">
+      <mat-card-content>
+        <form [formGroup]="householdForm" (ngSubmit)="onCreateHousehold()">
+          <mat-form-field appearance="fill">
+            <mat-label>New Household Name</mat-label>
+            <input matInput formControlName="newHouseholdName">
+          </mat-form-field>
+          <button class="ddButton_Household" mat-raised-button color="primary" type="submit" [disabled]="!householdForm.get('newHouseholdName').valid">Create Household</button>
+        </form>
+        <form [formGroup]="joinHouseholdForm" (ngSubmit)="onJoinHousehold()">
+          <mat-form-field appearance="fill">
+            <mat-label>Household ID</mat-label>
+            <input matInput formControlName="householdId">
+          </mat-form-field>
+          <button class="ddButton_Household" mat-raised-button color="primary" type="submit" [disabled]="!joinHouseholdForm.get('householdId').valid">Join Household</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div *ngIf="debug" class="container">
+    <div class="flex-container" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start stretch">
+      <mat-card style="background-color: lightblue" appearance="outlined">
+        <mat-card-content *ngIf="user">
+          <p><strong>Id: </strong> {{user.id}}</p>
+          <p><strong>Guid: </strong> {{user.guid}}</p>
+          <p><strong>Email: </strong> {{user.email}}</p>
+          <p><strong>Name: </strong> {{user.name}}</p>
+          <p><strong>Household: </strong> {{user.householdid}}</p>
+          <p><strong>Created: </strong> {{user.createdOn}}</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card style="background-color: rgb(173, 230, 182)" appearance="outlined">
+        <mat-card-content>one</mat-card-content>
+      </mat-card>
+      <mat-card style="background-color: rgb(230, 194, 173)" appearance="outlined">
+        <mat-card-content>two</mat-card-content>
+      </mat-card>
+      <mat-card style="background-color: rgb(185, 173, 230)" appearance="outlined">
+        <mat-card-content>three</mat-card-content>
+      </mat-card>
     </div>
   </div>
 </div>

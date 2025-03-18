@@ -5,7 +5,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship, mapped_column, Mapped
 from sqlalchemy.dialects.mssql import (DATETIME2, FLOAT, INTEGER, NVARCHAR, UNIQUEIDENTIFIER, BIT, JSON)
 
 class Base(DeclarativeBase):
-    def to_dict(self, depth=1):
+    def to_dict(self, depth=2):
         result = {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
         if depth > 0:
@@ -18,54 +18,7 @@ class Base(DeclarativeBase):
                         result[rel.key] = related_obj.to_dict(depth - 1)
         return result
 
-    # def to_dict(self, visited=None, depth=1):
-
-    #     if visited is None:
-    #         visited = set()
-    #     if self in visited:
-    #         return None
-    #     visited.add(self)
-
-    #     result = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-    #     if depth > 0:
-    #         for rel in self.__mapper__.relationships:
-    #             related_obj = getattr(self, rel.key)
-    #             if related_obj is not None:
-    #                 if isinstance(related_obj, list):
-    #                     result[rel.key] = [item.to_dict(visited, depth - 1) for item in related_obj]
-    #                 else:
-    #                     result[rel.key] = related_obj.to_dict(visited, depth - 1)
-    #     return result
-
-    # def to_dict(self, visited=None, depth=1):   #works, but let's see if we can make it faster
-    #     if visited is None:
-    #         visited = set()
-
-    #     if self in visited:
-    #         return None
-
-    #     visited.add(self)
-
-    #     result = {}
-    #     for c in self.__table__.columns:
-    #         value = getattr(self, c.name)
-    #         if isinstance(value, uuid.UUID):
-    #             result[c.name] = str(value)
-    #         else:
-    #             result[c.name] = value
-
-    #     if depth > 0:
-    #         for rel in self.__mapper__.relationships:
-    #             related_obj = getattr(self, rel.key)
-    #             if related_obj is not None:
-    #                 if isinstance(related_obj, list):
-    #                     result[rel.key] = [item.to_dict(visited, depth - 1) for item in related_obj]
-    #                 else:
-    #                     result[rel.key] = related_obj.to_dict(visited, depth - 1)
-    #     return result
-
-
+ 
     # def to_dict(self, visited=None):      #this one takes a while to complete but walks the entire stack. stops when it revisits a datatype and sets that value to null
         # if visited is None:
         #     visited = set()
@@ -143,9 +96,9 @@ class HouseholdMembership(Base):
     __tablename__ = 'memberships'
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
     household: Mapped[Household] = relationship("Household", back_populates="users")
-    household_id: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
     user: Mapped[User] = relationship("User", back_populates="households")
-    user_id: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
+    userid: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
     role: Mapped[str] = mapped_column(NVARCHAR, default='member')
     balance: Mapped[float] = mapped_column(FLOAT, default=0)
     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
@@ -154,7 +107,7 @@ class Task(Base):
     __tablename__ = 'tasks'
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
     household: Mapped[Household] = relationship("Household", back_populates="tasks")
-    household_id: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
     description: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
     active: Mapped[bool] = mapped_column(BIT, default=True)
@@ -177,7 +130,7 @@ class Activity(Base):
     __tablename__ = 'activities'
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
     household: Mapped[Household] = relationship("Household", back_populates="activities")
-    household_id: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
     date: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
     user: Mapped[User] = relationship("User", back_populates="activities")
     userId: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))

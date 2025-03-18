@@ -1,6 +1,6 @@
 import azure.functions as func
 import logging, os
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from service_models import engine
 from function_app_context import context
 from service_households import bpHouseholds
@@ -10,8 +10,8 @@ from service_activities import bpActivities
 from service_memberships import bpMembers
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
-factory = sessionmaker(bind=engine)
-session = factory()
+factory = sessionmaker(bind=engine) 
+session = scoped_session(factory)
 context.session = session
 context.KEY = os.getenv("DEBUGKEY")
 
