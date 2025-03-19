@@ -9,7 +9,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
 import { User } from '../../shared/models/user.model';
 import { HouseholdService } from '../../shared/services/household.service';
-import { MewmbershipService } from '../../shared/services/membership.service';
 import { Membership } from '../../shared/models/membership.model';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 
@@ -22,11 +21,13 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
-  user: User;
+  debug: boolean = false;
   profileForm: FormGroup;
   householdForm: FormGroup;
   joinHouseholdForm: FormGroup;
-  debug: boolean = false;
+  user: User;
+  op: string;
+  hid: string;
 
   constructor(
     private userService: UserService,
@@ -39,6 +40,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initForms();
 
+    this.route.queryParams
+      .pipe(takeUntil(this._destroying$))
+      .subscribe(params => {
+        this.op = params['op']
+        this.hid = params['hid'];
+        const dbg = params['dbg'];
+        if (dbg == 'xoxo') this.debug = true;
+      })
+
     this.userService.currentUser$
       .pipe(takeUntil(this._destroying$))
       .subscribe((newuser) => {
@@ -50,20 +60,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
             name: newuser.name
           });
           this.profileForm.markAsPristine();
+          if (this.op && this.hid && this.op == "join") {
+            console.log('join household', this.hid);
+            this.add_membership(this.hid, this.user.id);
+          }
         }
       });
-    this.route.queryParams
-      .pipe(takeUntil(this._destroying$))
-      .subscribe(params => {
-        const dbg = params['dbg'];
-        const op = params['op']
-        const hid = params['hid'];
-
-        if (dbg == 'xoxo') this.debug = true;
-        if (op && hid && op == "join") {
-          this.add_membership(hid, this.user.id);
-        }
-      })
   }
 
   initForms() {

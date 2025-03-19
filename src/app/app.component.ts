@@ -15,13 +15,11 @@ export class AppComponent implements OnInit {
   constructor(
     private authService: AuthService, 
     private userService: UserService,
-    private membershipService: MewmbershipService,
   ) {  }
 
   ngOnInit() {
     this.authService.ngOnInit(); // hack: start this service to get the user's info
     this.userService.ngOnInit(); // hack: start this service to get the user's info
-    this.membershipService.ngOnInit(); // hack: start this service to get the user's info
   }
 
 }

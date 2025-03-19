@@ -5,6 +5,10 @@ import { AuthService } from '../services/auth.service';
 
 export const AuthGuard: CanActivateFn | CanActivateChildFn = (route, state) =>
 {
+    console.log('AuthGuard: called');
+    console.log('AuthGuard: route', route);
+    console.log('AuthGuard: state', state);
+
     const router: Router = inject(Router);
 
     // Check the authentication status
@@ -13,10 +17,12 @@ export const AuthGuard: CanActivateFn | CanActivateChildFn = (route, state) =>
         {
             if ( !authenticated )
             {
-                // Redirect to the sign-in page with a redirectUrl param
-                // const redirectURL = state.url === '/' ? '' : `redirectURL=${state.url}`;
-                return of(router.parseUrl(`/`));
+                // const redirectURL = state.url === '/' ? '' : `${state.url}`;
+                const redirectURL = state.url === '/' ? '' : `${route.routeConfig.path}`;
+                console.log("AuthGuard: User is not authenticated, redirect: ", redirectURL);
+                return of(router.parseUrl(`/login?redirectURL=${redirectURL}`));
             }
+            console.log("AuthGuard: User IS authenticated");
             return of(true);
         }),
     );

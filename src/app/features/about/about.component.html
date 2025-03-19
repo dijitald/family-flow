@@ -1,0 +1,51 @@
+
+<div class="container,testcontainer">
+    
+    <h2>Normal</h2>
+    <div class="flex-container" fxLayout="row">
+      <div class="child-1">1. One</div> 
+      <div class="child-2">2. Two</div> 
+      <div class="child-3">3. Three</div>
+    </div>
+
+    <h2>Default</h2>
+    <div class="flex-container" fxLayout="row">
+      <div class="child-1" fxFlex>1. One</div> 
+      <div class="child-2" fxFlex>2. Two</div> 
+      <div class="child-3" fxFlex>3. Three</div>
+    </div>
+
+    <h2>fxFlex with grow shrink values</h2>
+    <div class="flex-container" fxLayout="row">
+      <div class="child-1" fxFlex="2 1 0">1. One</div> 
+      <div class="child-2" fxFlex>2. Two</div> 
+      <div class="child-3" fxFlex>3. Three</div>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="flex-container" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start stretch">
+      <mat-card style="background-color: lightblue" appearance="outlined">
+        <mat-card-content *ngIf="user">
+          <p><strong>Id: </strong> {{user.id}}</p>
+          <p><strong>Guid: </strong> {{user.guid}}</p>
+          <p><strong>Email: </strong> {{user.email}}</p>
+          <p><strong>Name: </strong> {{user.name}}</p>
+          <p><strong>Household: </strong> {{user.householdid}}</p>
+          <p><strong>Created: </strong> {{user.createdOn}}</p>
+        </mat-card-content>
+      </mat-card>
+      <mat-card style="background-color: rgb(173, 230, 182)" appearance="outlined">
+        <mat-card-content>one</mat-card-content>
+      </mat-card>
+      <mat-card style="background-color: rgb(230, 194, 173)" appearance="outlined">
+        <mat-card-content>two</mat-card-content>
+      </mat-card>
+      <mat-card style="background-color: rgb(185, 173, 230)" appearance="outlined">
+        <mat-card-content>three</mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+

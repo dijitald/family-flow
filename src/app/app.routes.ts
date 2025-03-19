@@ -6,10 +6,23 @@ import { MsalGuard } from "@azure/msal-angular";
 import { LayoutComponent } from "./features/layout/layout.component";
 import { NoAuthGuard } from "./shared/auth/noAuth.guard";
 import { AuthGuard } from "./shared/auth/auth.guard";
+import { AboutComponent } from "./features/about/about.component";
+import { AdminGuard } from "./shared/auth/admin.guard";
 
 export const routes: Routes = [
   { 
     path: "", 
+    pathMatch: 'full',
+    redirectTo: "about"
+  },
+  { 
+    path: "about", 
+    component: AboutComponent, 
+    canActivate: [AuthGuard],
+    pathMatch: 'full',
+  },
+  { 
+    path: "login",
     component: LoginComponent, 
     canActivate: [NoAuthGuard],
     pathMatch: 'full',

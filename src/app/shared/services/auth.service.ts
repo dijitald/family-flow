@@ -8,8 +8,9 @@ import { Auth } from '../models/auth.model';
 @Injectable({ providedIn: 'root'})
 export class AuthService implements OnInit, OnDestroy{
   private readonly _destroying$ = new Subject<void>();
+  redirectUrl: string | null = null;
   private usePopUp: boolean = true;
-    private _currentLogin$: BehaviorSubject<Auth> = new BehaviorSubject({
+  private _currentLogin$: BehaviorSubject<Auth> = new BehaviorSubject({
       guid:'',  
       name:'', 
       email:'', 
@@ -20,62 +21,71 @@ export class AuthService implements OnInit, OnDestroy{
   
   constructor(
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
-    private authService: MsalService,
+    private msalService: MsalService,
   ) { }
 
   public ngOnInit(): void {
     console.log('AuthService init');
-    this.authService.handleRedirectObservable().subscribe();
-}
+    this.msalService.handleRedirectObservable().subscribe();
 
-login() {
-    if (this.usePopUp) {
-        let popUpRequest: PopupRequest = null;
-        if (this.msalGuardConfig.authRequest){
-            console.log('authrequest', this.msalGuardConfig.authRequest);
-            popUpRequest = {...this.msalGuardConfig.authRequest} as PopupRequest;
-        }
-        console.log('popuprequest', popUpRequest);
-        this.authService.loginPopup(popUpRequest)
-            .subscribe((response: AuthenticationResult) => {
-                this.setActiveAccount(response.account);
-                console.log("AuthService", this._currentLogin$.value);          
-            });
-    } else {
-        let redirRequest: RedirectRequest = null;
-        if (this.msalGuardConfig.authRequest){
-            console.log('authrequest', this.msalGuardConfig.authRequest);
-            redirRequest = {...this.msalGuardConfig.authRequest} as RedirectRequest;
-        }
-        this.authService.loginRedirect(redirRequest);
-    }
-}
+    // this.msalService.initialize();
+    // this.msalService.instance.handleRedirectPromise().then((response) => {
+    //   if (response) {
+    //     this.setActiveAccount(response.account);
+    //   }
+    // });
 
-logout() {
-    this._currentLogin$.next(undefined);
-    if (this.usePopUp) {
-      this.authService.logoutPopup({ mainWindowRedirectUri: "/" });
-    } else {
-      this.authService.logoutRedirect();
-    }
-}
 
-private setActiveAccount(activeAccount: AccountInfo): void {       
-  if (activeAccount) {
-    this.authService.instance.setActiveAccount(activeAccount);
   }
-  if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
-    let accounts = this.authService.instance.getAllAccounts();
-    this.authService.instance.setActiveAccount(accounts[0]);
+
+  login() {
+      if (this.usePopUp) {
+          let popUpRequest: PopupRequest = null;
+          if (this.msalGuardConfig.authRequest){
+              console.log('authrequest', this.msalGuardConfig.authRequest);
+              popUpRequest = {...this.msalGuardConfig.authRequest} as PopupRequest;
+          }
+          console.log('popuprequest', popUpRequest);
+          this.msalService.loginPopup(popUpRequest)
+              .subscribe((response: AuthenticationResult) => {
+                  this.setActiveAccount(response.account);
+                  console.log("AuthService", this._currentLogin$.value);          
+              });
+      } else {
+          let redirRequest: RedirectRequest = null;
+          if (this.msalGuardConfig.authRequest){
+              console.log('authrequest', this.msalGuardConfig.authRequest);
+              redirRequest = {...this.msalGuardConfig.authRequest} as RedirectRequest;
+          }
+          this.msalService.loginRedirect(redirRequest);
+      }
   }
-  this._currentLogin$.next({
-      guid: activeAccount.homeAccountId,
-      name: activeAccount.name,
-      email: activeAccount.username,
-      isLoggedIn: true,
-      authError: '',
-      loading: false
-  });
+
+  logout() {
+      this._currentLogin$.next(undefined);
+      if (this.usePopUp) {
+        this.msalService.logoutPopup({ mainWindowRedirectUri: "/" });
+      } else {
+        this.msalService.logoutRedirect();
+      }
+  }
+
+  private setActiveAccount(activeAccount: AccountInfo): void {       
+    if (activeAccount) {
+      this.msalService.instance.setActiveAccount(activeAccount);
+    }
+    if (!activeAccount && this.msalService.instance.getAllAccounts().length > 0) {
+      let accounts = this.msalService.instance.getAllAccounts();
+      this.msalService.instance.setActiveAccount(accounts[0]);
+    }
+    this._currentLogin$.next({
+        guid: activeAccount.homeAccountId,
+        name: activeAccount.name,
+        email: activeAccount.username,
+        isLoggedIn: true,
+        authError: '',
+        loading: false
+    });
   }
 
   public get currentAuth$(): Observable<Auth> {
@@ -86,6 +96,12 @@ private setActiveAccount(activeAccount: AccountInfo): void {
   {
       if ( this._currentLogin$.value.isLoggedIn )
       {
+          return of(true);
+      }
+      else if ( this.msalService.instance.getActiveAccount())
+      {
+          const activeAccount = this.msalService.instance.getActiveAccount();
+          this.setActiveAccount(activeAccount);
           return of(true);
       }
       return of(false);

@@ -1,25 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Router, CanActivate } from '@angular/router';
-//import { UserService } from '../services/user.service';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
-// @Injectable()
-// export class AdminGuard implements CanActivate {
+@Injectable({ providedIn: 'root' })
+export class AdminGuard implements CanActivate {
 
-//     constructor(private router: Router,
-//         private userSvc: UserService) { }
+    constructor(private authService: AuthService, private router: Router) {}
 
-//     canActivate() {
-//         const userState = this.userSvc.getCurrentUser();
-
-//         if (userState && userState.user.role === 'admin') {
-//             return true;
-
-//         } else {
-//             this.router.navigate(['/']);
-//             return false;
-//         }
-//     }
-// }
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) : boolean {
+        console.log('AdminGuard: canActivate called');
+        console.log('AdminGuard: route', route);
+        console.log('AdminGuard: state', state);
+        if (this.authService.isLoggedIn()) {
+            console.log('AdminGuard: user is logged in');
+            //check if the user has admin role?
+            return true;
+        } else {
+            this.authService.redirectUrl = state.url;
+            this.router.navigate(['/login']);
+            return false;
+        }
+    }
+}
 
 // export const AdminGuard: CanActivateFn | CanActivateChildFn = (route, state) =>
 // {
