@@ -19,7 +19,7 @@ def user_service(req: func.HttpRequest) -> func.HttpResponse:
             if not guid or not email or not name:
                 raise ValueError()
         except ValueError:
-            logging.info('Invalid User Data')
+            logging.error('Invalid User Data')
             return func.HttpResponse("Invalid User Data", status_code=400)
     elif req.method == 'POST' or req.method == 'PUT':
         try:
