@@ -14,26 +14,26 @@ from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 configure_azure_monitor(logger_name="familyflow")
 context.logging = logging.getLogger("familyflow")  
 
-try:
-    app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
-    app.register_blueprint(bpHouseholds)
-    app.register_blueprint(bpUsers)
-    app.register_blueprint(bpTasks)
-    app.register_blueprint(bpActivities)
-    app.register_blueprint(bpMembers)
-except Exception as e:
-    context.logging.critical(f"Error initializing application: {e}")
-    raise e
+# try:
+#     app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+#     app.register_blueprint(bpHouseholds)
+#     app.register_blueprint(bpUsers)
+#     app.register_blueprint(bpTasks)
+#     app.register_blueprint(bpActivities)
+#     app.register_blueprint(bpMembers)
+# except Exception as e:
+#     context.logging.critical(f"Error initializing application: {e}")
+#     raise e
 
-try:
-    SQLAlchemyInstrumentor().instrument(engine=engine, service="familyflow")
-    factory = sessionmaker(bind=engine) 
-    session = scoped_session(factory)
-    context.session = session
-    context.KEY = os.getenv("DEBUGKEY")
-except Exception as e:
-    context.logging.critical(f"Error initializing database: {e}")
-    raise e
+# try:
+#     SQLAlchemyInstrumentor().instrument(engine=engine, service="familyflow")
+#     factory = sessionmaker(bind=engine) 
+#     session = scoped_session(factory)
+#     context.session = session
+#     context.KEY = os.getenv("DEBUGKEY")
+# except Exception as e:
+#     context.logging.critical(f"Error initializing database: {e}")
+#     raise e
 
 @app.route(route="ping", methods=["GET"])
 def ping(req: func.HttpRequest) -> func.HttpResponse:
