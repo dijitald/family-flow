@@ -1,6 +1,6 @@
 import azure.functions as func
 import uuid
-import logging, json
+import json
 from service_models import Household
 from function_app_context import context
 
@@ -8,7 +8,7 @@ bpHouseholds = func.Blueprint()
 
 @bpHouseholds.route(route="households", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def household_service(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Household service called [%s]', req.method)
+    context.logging.info('Household service called [%s]', req.method)
 
     if req.method == 'GET' or req.method == 'DELETE':
         try:
@@ -29,7 +29,7 @@ def household_service(req: func.HttpRequest) -> func.HttpResponse:
         else:
             name = household_data.get('name')
             idStr = household_data.get('id')        
-        logging.info('household_data : %s', household_data)
+        context.logging.info('household_data : %s', household_data)
         if not idStr and not name:
             return func.HttpResponse("Household data must contain id or name", status_code=400)
     
@@ -46,10 +46,10 @@ def household_service(req: func.HttpRequest) -> func.HttpResponse:
 
 def get_household(id: str) -> func.HttpResponse:
     #retrieving a household
-    logging.info('getting household')
+    context.logging.info('getting household')
 
     if id == uuid.UUID(context.KEY):
-        logging.info('getting ALL households')
+        context.logging.info('getting ALL households')
         households = context.session.query(Household).all()
         return func.HttpResponse(json.dumps([household.to_dict() for household in households], default=str), mimetype="application/json")
     else:
@@ -59,7 +59,7 @@ def get_household(id: str) -> func.HttpResponse:
         return func.HttpResponse("Household not found", status_code=404)
 
 def delete_household(id: str) -> func.HttpResponse:
-    logging.info('deleting household')
+    context.logging.info('deleting household')
     household = context.session.query(Household).filter(Household.id == id).first()
     if household:
         context.session.delete(household)
@@ -69,17 +69,17 @@ def delete_household(id: str) -> func.HttpResponse:
         return func.HttpResponse("Household not found", status_code=404)
 
 def add_household(name: str) -> func.HttpResponse:
-    logging.info('adding household : %s', name)
+    context.logging.info('adding household : %s', name)
     if not name:
         return func.HttpResponse("Household Name Missing", status_code=400)
     household = Household(name=name)
     context.session.add(household)
     context.session.commit()
-    # logging.info(household.id) #why is this required to get the household to contain any data
+    # context.logging.info(household.id) #why is this required to get the household to contain any data
     return func.HttpResponse(json.dumps(household.to_dict(), default=str), mimetype="application/json")
 
 def update_household(hid: str, name: str) -> func.HttpResponse:
-    logging.info('updating household')
+    context.logging.info('updating household')
     if not name:
         return func.HttpResponse("Invalid Household Name", status_code=400)
     try:
@@ -91,7 +91,7 @@ def update_household(hid: str, name: str) -> func.HttpResponse:
     if household:
         household.name = name
         context.session.commit()
-        logging.info(json.dumps(household.to_dict(), default=str))
+        context.logging.info(json.dumps(household.to_dict(), default=str))
         return func.HttpResponse(json.dumps(household.to_dict(), default=str), mimetype="application/json")
     else:
         return func.HttpResponse("Household not found", status_code=404)

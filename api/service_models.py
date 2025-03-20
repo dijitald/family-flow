@@ -1,8 +1,8 @@
-import os, uuid, json
+import os, uuid
 from datetime import datetime
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, relationship, mapped_column, Mapped
-from sqlalchemy.dialects.mssql import (DATETIME2, FLOAT, INTEGER, NVARCHAR, UNIQUEIDENTIFIER, BIT, JSON)
+from sqlalchemy.dialects.mssql import (DATETIME2, FLOAT, INTEGER, NVARCHAR, UNIQUEIDENTIFIER, BIT)
 
 class Base(DeclarativeBase):
     def to_dict(self, depth=2):

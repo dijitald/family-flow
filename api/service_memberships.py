@@ -1,6 +1,6 @@
 import uuid
 import azure.functions as func
-import logging, json
+import json
 from sqlalchemy.orm import joinedload
 from function_app_context import context
 from service_models import Household, HouseholdMembership, User
@@ -9,7 +9,7 @@ bpMembers = func.Blueprint()
 
 @bpMembers.route(route="memberships", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def membership_service(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Membership service called [%s]', req.method)
+    context.logging.info('Membership service called [%s]', req.method)
     
     if req.method == 'GET' or req.method == 'DELETE':
         try:
@@ -31,7 +31,7 @@ def membership_service(req: func.HttpRequest) -> func.HttpResponse:
             uid = membership_data.get('uid')
             balance = membership_data.get('balance')
             role = membership_data.get('role')
-        logging.info('user_data : %s', membership_data)
+        context.logging.info('user_data : %s', membership_data)
         try:
             hid = uuid.UUID(householdid)
         except ValueError:
@@ -49,19 +49,19 @@ def membership_service(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse("Method Not Allowed", status_code=405)
     
 def get_membership(hid: str, uid :str) -> func.HttpResponse:
-    logging.info('get_membership equal [%s][%s] = %s', hid, context.KEY, str(hid) == str(context.KEY))
+    context.logging.info('get_membership equal [%s][%s] = %s', hid, context.KEY, str(hid) == str(context.KEY))
     if str(hid) == str(context.KEY):  # get all memberships  
-        logging.info('getting ALL memberships')
+        context.logging.info('getting ALL memberships')
         memberships = context.session.query(HouseholdMembership).options(joinedload(HouseholdMembership.household)).all()
         return func.HttpResponse(json.dumps([membership.to_dict() for membership in memberships], default=str), mimetype="application/json")
     elif not hid:           # get all memberships for a user
-        logging.info('getting USER memberships')
+        context.logging.info('getting USER memberships')
         memberships = context.session.query(HouseholdMembership).filter(HouseholdMembership.userid == uid).options(joinedload(HouseholdMembership.household)).all()
         # if memberships:
         return func.HttpResponse(json.dumps([membership.to_dict() for membership in memberships], default=str), mimetype="application/json")
         # return func.HttpResponse("{}", mimetype="application/json")
     else :                   # get a membership for a user in a household
-        logging.info('getting SPECIFIC membership')
+        context.logging.info('getting SPECIFIC membership')
         membership = context.session.query(HouseholdMembership).filter(HouseholdMembership.householdid == hid and HouseholdMembership.userid == uid).options(joinedload(HouseholdMembership.household)).first()
         if membership:
             return func.HttpResponse(json.dumps(membership.to_dict(), default=str), mimetype="application/json")   
@@ -76,7 +76,7 @@ def delete_membership(hid: str, uid :str) -> func.HttpResponse:
     return func.HttpResponse("Membership Not Found", status_code=404)
 
 def create_membership(hid: str, uid: str) -> func.HttpResponse:
-    logging.info('creating membership for user %s in household %s', uid, hid)
+    context.logging.info('creating membership for user %s in household %s', uid, hid)
 
     household = context.session.query(Household).filter(Household.id == hid).first()
     if not household:
@@ -88,16 +88,16 @@ def create_membership(hid: str, uid: str) -> func.HttpResponse:
     membership = HouseholdMembership(householdid=hid, userid=uid, role='member', balance=0)
     context.session.add(membership)
     context.session.commit()
-    logging.info('membership created [%s]', json.dumps(membership.to_dict(), default=str))
+    context.logging.info('membership created [%s]', json.dumps(membership.to_dict(), default=str))
     return func.HttpResponse(json.dumps(membership.to_dict(), default=str), mimetype="application/json")
 
 def update_membership(hid: str, uid: str, balance: float, role : str) -> func.HttpResponse:
-    logging.info('updating membership')
+    context.logging.info('updating membership')
     membership = context.session.query(HouseholdMembership).filter(HouseholdMembership.householdid == hid and HouseholdMembership.userid == uid).first()
     if membership:
         membership.balance = balance
         membership.role = role
         context.session.commit()
-        logging.info('membership updated')
+        context.logging.info('membership updated')
         return func.HttpResponse(json.dumps(membership.to_dict(), default=str), mimetype="application/json")
     return func.HttpResponse("Membership Not Found", status_code=404)

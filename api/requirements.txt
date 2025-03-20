@@ -6,3 +6,4 @@ azure-functions
 sqlalchemy
 pyodbc
 azure-monitor-opentelemetry
+opentelemetry-instrumentation-sqlalchemy
