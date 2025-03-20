@@ -1,37 +1,20 @@
 import azure.functions as func
-import logging, os
-from sqlalchemy.orm import sessionmaker, scoped_session
-from service_models import engine
-from function_app_context import context
-from service_households import bpHouseholds
-from service_users import bpUsers
-from service_tasks import bpTasks
-from service_activities import bpActivities
-from service_memberships import bpMembers
+import logging
+from azure.monitor.opentelemetry import configure_azure_monitor
+# from azure.monitor.opentelemetry import configure_azure_monitor
+# from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
+# from sqlalchemy import create_engine, text
 
-try:
-    app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
-    app.register_blueprint(bpHouseholds)
-    app.register_blueprint(bpUsers)
-    app.register_blueprint(bpTasks)
-    app.register_blueprint(bpActivities)
-    app.register_blueprint(bpMembers)
-except Exception as e:
-    logging.critical(f"Error initializing application: {e}")
-    raise e
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-try:
-    factory = sessionmaker(bind=engine) 
-    session = scoped_session(factory)
-    context.session = session
-    context.KEY = os.getenv("DEBUGKEY")
-except Exception as e:
-    logging.critical(f"Error initializing database: {e}")
-    raise e
-
-
+configure_azure_monitor(
+    logger_name="familyflow",  # Set the namespace for the logger in which you would like to collect telemetry for if you are collecting logging telemetry. This is imperative so you do not collect logging telemetry from the SDK itself.
+)
+logger = logging.getLogger("familyflow")  # Logging telemetry will be collected from logging calls made with this logger and all of it's children loggers.
 
 @app.route(route="ping", methods=["GET"])
 def ping(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
+    logger.info("Ping received")
     return func.HttpResponse("pong", status_code=200)
+
