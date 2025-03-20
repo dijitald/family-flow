@@ -11,11 +11,12 @@ from service_memberships import bpMembers
 from azure.monitor.opentelemetry import configure_azure_monitor
 from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+
 configure_azure_monitor(logger_name="familyflow")
 context.logging = logging.getLogger("familyflow")  
 
 # try:
-#     app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 #     app.register_blueprint(bpHouseholds)
 #     app.register_blueprint(bpUsers)
 #     app.register_blueprint(bpTasks)
