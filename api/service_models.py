@@ -4,19 +4,19 @@ from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, relationship, mapped_column, Mapped
 from sqlalchemy.dialects.mssql import (DATETIME2, FLOAT, INTEGER, NVARCHAR, UNIQUEIDENTIFIER, BIT)
 
-# class Base(DeclarativeBase):
-#     def to_dict(self, depth=2):
-#         result = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+class Base(DeclarativeBase):
+    def to_dict(self, depth=2):
+        result = {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-#         if depth > 0:
-#             for rel in self.__mapper__.relationships:
-#                 related_obj = getattr(self, rel.key)
-#                 if related_obj is not None:
-#                     if isinstance(related_obj, list):
-#                         result[rel.key] = [item.to_dict(depth - 1) for item in related_obj]
-#                     else:
-#                         result[rel.key] = related_obj.to_dict(depth - 1)
-#         return result
+        if depth > 0:
+            for rel in self.__mapper__.relationships:
+                related_obj = getattr(self, rel.key)
+                if related_obj is not None:
+                    if isinstance(related_obj, list):
+                        result[rel.key] = [item.to_dict(depth - 1) for item in related_obj]
+                    else:
+                        result[rel.key] = related_obj.to_dict(depth - 1)
+        return result
 
  
 #     # def to_dict(self, visited=None):      #this one takes a while to complete but walks the entire stack. stops when it revisits a datatype and sets that value to null
