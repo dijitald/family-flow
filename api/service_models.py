@@ -77,17 +77,17 @@ class Household(Base):
     # tasks: Mapped[list["Task"]] = relationship("Task", back_populates="household")
     # activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="household")
 
-# class User(Base):
-#     __tablename__ = 'users'
-#     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
-#     guid: Mapped[str] = mapped_column(NVARCHAR, nullable=False)  # liveid uuid.tenantid
-#     email: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
-#     sms: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
-#     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False, default='New User')
-#     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
-#     lastLogon: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
-#     avatarPath: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
-#     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'), nullable=True)
+class User(Base):
+    __tablename__ = 'users'
+    id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
+    guid: Mapped[str] = mapped_column(NVARCHAR, nullable=False)  # liveid uuid.tenantid
+    email: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
+    sms: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
+    name: Mapped[str] = mapped_column(NVARCHAR, nullable=False, default='New User')
+    createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
+    lastLogon: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
+    avatarPath: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'), nullable=True)
 #     households: Mapped[list["HouseholdMembership"]] = relationship("HouseholdMembership", back_populates="user")
 #     activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="user")
 
