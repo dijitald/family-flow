@@ -91,53 +91,53 @@ class User(Base):
 #     households: Mapped[list["HouseholdMembership"]] = relationship("HouseholdMembership", back_populates="user")
 #     activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="user")
 
-# class HouseholdMembership(Base):
-#     __tablename__ = 'memberships'
-#     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
+class HouseholdMembership(Base):
+    __tablename__ = 'memberships'
+    id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
 #     household: Mapped[Household] = relationship("Household", back_populates="users")
-#     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
 #     user: Mapped[User] = relationship("User", back_populates="households")
-#     userid: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
-#     role: Mapped[str] = mapped_column(NVARCHAR, default='member')
-#     balance: Mapped[float] = mapped_column(FLOAT, default=0)
-#     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
+    userid: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
+    role: Mapped[str] = mapped_column(NVARCHAR, default='member')
+    balance: Mapped[float] = mapped_column(FLOAT, default=0)
+    createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
 
-# class Task(Base):
-#     __tablename__ = 'tasks'
-#     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
+class Task(Base):
+    __tablename__ = 'tasks'
+    id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
 #     household: Mapped[Household] = relationship("Household", back_populates="tasks")
-#     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
-#     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
-#     description: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
-#     active: Mapped[bool] = mapped_column(BIT, default=True)
-#     rewardAmount: Mapped[float] = mapped_column(FLOAT, default=0)
-#     lastCompleted: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
-#     nextDueDate: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
-#     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
-#     createdBy: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
-#     frequency: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
-#     everyWeekday: Mapped[bool] = mapped_column(BIT, default=False)
-#     interval: Mapped[int] = mapped_column(INTEGER, default=0)
-#     dayOfWeek: Mapped[int] = mapped_column(INTEGER, default=0)
-#     dayOfMonth: Mapped[int] = mapped_column(INTEGER, default=0)
-#     instance: Mapped[int] = mapped_column(INTEGER, default=0)
-#     isInstanceBasedMonthly: Mapped[bool] = mapped_column(BIT, default=False)
-#     monthOfYear: Mapped[int] = mapped_column(INTEGER, default=0)
-#     isInstanceBasedYearly: Mapped[bool] = mapped_column(BIT, default=False)
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
+    name: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
+    description: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
+    active: Mapped[bool] = mapped_column(BIT, default=True)
+    rewardAmount: Mapped[float] = mapped_column(FLOAT, default=0)
+    lastCompleted: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
+    nextDueDate: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
+    createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
+    createdBy: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
+    frequency: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
+    everyWeekday: Mapped[bool] = mapped_column(BIT, default=False)
+    interval: Mapped[int] = mapped_column(INTEGER, default=0)
+    dayOfWeek: Mapped[int] = mapped_column(INTEGER, default=0)
+    dayOfMonth: Mapped[int] = mapped_column(INTEGER, default=0)
+    instance: Mapped[int] = mapped_column(INTEGER, default=0)
+    isInstanceBasedMonthly: Mapped[bool] = mapped_column(BIT, default=False)
+    monthOfYear: Mapped[int] = mapped_column(INTEGER, default=0)
+    isInstanceBasedYearly: Mapped[bool] = mapped_column(BIT, default=False)
 
-# class Activity(Base):
-#     __tablename__ = 'activities'
-#     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
+class Activity(Base):
+    __tablename__ = 'activities'
+    id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
 #     household: Mapped[Household] = relationship("Household", back_populates="activities")
-#     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
-#     date: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
+    householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
+    date: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
 #     user: Mapped[User] = relationship("User", back_populates="activities")
-#     userId: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
-#     # userName: Mapped[str] = mapped_column(NVARCHAR)
-#     amount: Mapped[float] = mapped_column(FLOAT, default=0)
-#     isCredit: Mapped[bool] = mapped_column(BIT)  # true = credit, false = debit
-#     description: Mapped[str] = mapped_column(NVARCHAR)
-#     tags: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
+    userId: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
+    # userName: Mapped[str] = mapped_column(NVARCHAR)
+    amount: Mapped[float] = mapped_column(FLOAT, default=0)
+    isCredit: Mapped[bool] = mapped_column(BIT)  # true = credit, false = debit
+    description: Mapped[str] = mapped_column(NVARCHAR)
+    tags: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
     
 
 # Set up SQLAlchemy
