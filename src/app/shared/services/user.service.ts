@@ -76,6 +76,7 @@ export class UserService implements OnInit, OnDestroy{
         tap((member: Membership) => {
             console.log("addMembership", member);
             if (member) {
+              if (!this._currentUser$.value.households) this._currentUser$.value.households = []; 
               this._currentUser$.value.households.push(member);
               this._currentUser$.value.householdid = houseid;
               this._currentUser$.next(this._currentUser$.value);
