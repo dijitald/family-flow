@@ -37,6 +37,9 @@ def user_service(req: func.HttpRequest) -> func.HttpResponse:
         if not id and not name and not email:
             return func.HttpResponse("Invalid User Data", status_code=400)
 
+
+    return func.HttpResponse(status_code=200)
+
 #     if req.method == 'GET' :
 #         return get_add_user(guid, email, name)
 #     elif req.method == 'DELETE':
