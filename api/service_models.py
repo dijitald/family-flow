@@ -144,4 +144,4 @@ class Activity(Base):
 #DATABASE_URL = "mssql+pyodbc://username:password@server:1433/database?driver=ODBC+Driver+18+for+SQL+Server"
 DATABASE_URL = os.getenv("DATABASE_CONNECTIONSTRING")
 engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
