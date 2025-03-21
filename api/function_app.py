@@ -8,7 +8,7 @@ from service_users import bpUsers
 # from service_memberships import bpMembers
 from azure.monitor.opentelemetry import configure_azure_monitor
 # from service_models import engine
-# from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker, scoped_session
 # from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
