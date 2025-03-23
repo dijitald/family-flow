@@ -1,6 +1,6 @@
 import azure.functions as func
 import logging
-# from azure.monitor.opentelemetry import configure_azure_monitor
+from azure.monitor.opentelemetry import configure_azure_monitor
 # from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
