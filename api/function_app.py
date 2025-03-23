@@ -7,7 +7,7 @@ from service_tasks import bpTasks
 from service_activities import bpActivities
 from service_memberships import bpMembers
 # from service_models import engine
-# from azure.monitor.opentelemetry import configure_azure_monitor
+from azure.monitor.opentelemetry import configure_azure_monitor
 # from sqlalchemy.orm import sessionmaker, scoped_session
 # from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 
