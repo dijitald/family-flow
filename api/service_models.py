@@ -1,4 +1,4 @@
-import os, uuid
+import os, uuid, logging
 from datetime import datetime
 from function_app_context import context
 from sqlalchemy import create_engine, ForeignKey
@@ -148,7 +148,7 @@ try :
     Base.metadata.create_all(engine)
 
 except Exception as e:
-    context.logging.critical(f"Error creating database tables: {e}")
+    logging.critical(f"Error creating database tables: {e}")
     raise
 finally:
     engine.dispose()
