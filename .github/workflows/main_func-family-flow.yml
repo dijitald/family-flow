@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'api' # set this to the path to your web app project, defaults to the repository root
   PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
 
 jobs:
@@ -43,8 +43,7 @@ jobs:
 
       - name: Zip artifact for deployment
         run: |
-          cd api
-          zip -r ../release.zip .
+          zip -r release.zip api/.
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
