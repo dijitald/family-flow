@@ -37,19 +37,23 @@ jobs:
       #     source venv/bin/activate
 
       # - name: Install dependencies
-      #   run: pip install -r api/requirements.txt
+      #   run: |
+      #     cd api
+      #     pip install -r requirements.txt -t .
 
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
-        run: |
-          zip -r release.zip .
+        run: zip release.zip ./api/* -r
+
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: python-app
-          path: release.zip
+          path: |
+            release.zip
+            !venv/
 
   deploy:
     runs-on: ubuntu-latest
