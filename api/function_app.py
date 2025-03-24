@@ -1,10 +1,9 @@
 import azure.functions as func
 import logging, os
-from function_app_context import context
 from azure.monitor.opentelemetry import configure_azure_monitor
+from function_app_context import context
 
 from sqlalchemy.orm import sessionmaker, scoped_session
-from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 from service_models import engine
 from service_users import bpUsers
 from service_households import bpHouseholds
@@ -17,7 +16,6 @@ context.logging = logging.getLogger("familyflow")
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 try:
-    SQLAlchemyInstrumentor().instrument(engine=engine, service="familyflow")
     factory = sessionmaker(bind=engine) 
     session = scoped_session(factory)
     context.session = session
