@@ -2,14 +2,12 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
 
-name: func-family-flow Deployment and Build
+name: Build and deploy Python project to Azure Function App - func-family-flow
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'api/**/*'
   workflow_dispatch:
 
 env:
@@ -26,23 +24,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # - name: Setup Python version
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: ${{ env.PYTHON_VERSION }}
+      - name: Setup Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      # - name: Create and start virtual environment
-      #   run: |
-      #     python -m venv venv
-      #     source venv/bin/activate
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
 
-      # - name: Install dependencies
-      #   run: pip install -r api/requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./api/* -r
+        run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -71,9 +69,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A3328D12CF6D4FD48A8DDF76622D18F4 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_716D3EB7F7174AACB4C75FA90874E1E7 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_FDD681B94087424B933A330B3FD1D4AA }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F20118C13CE74F8797AF9886F73DE274 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FD647D2048A04C60AF1EFA6541F720BF }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C8F2DAD81CE746E2BB16D707F456FDC9 }}
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
@@ -82,4 +80,4 @@ jobs:
           app-name: 'func-family-flow'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          remote-build: true
+          
