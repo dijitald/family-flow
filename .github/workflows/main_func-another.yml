@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python project to Azure Function App - func-another
+name: func-another
 
 on:
   push:
@@ -37,7 +37,9 @@ jobs:
           source venv/bin/activate
 
       - name: Install dependencies
-        run: pip install -r requirements.txt -t api/.
+        run: |
+          cwd api
+          pip install -r requirements.txt -t .
 
       # Optional: Add step to run tests here
 
