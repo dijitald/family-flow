@@ -7,21 +7,35 @@ on:
     paths:
       - 'src/**/*'
       - '*.json'
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+  workflow_dispatch:
 
+env:
+  PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+      
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
+    
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
+
+      - name: Setup Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Create and start virtual environment
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+
+      - name: Install dependencies
+        run: pip install -r api/requirements.txt -t api/.
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -36,18 +50,7 @@ jobs:
           output_location: "/dist/family-flow/browser" # Built app content directory - optional
           remote_build: true
           ###### End of Repository/Build Configurations ######
-        # env:
-        #   SCM_DO_BUILD_DURING_DEPLOYMENT: true
-        #   ENABLE_ORYX_BUILD: true
+        env:
+          SCM_DO_BUILD_DURING_DEPLOYMENT: true
+          ENABLE_ORYX_BUILD: true
   
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AGREEABLE_BEACH_0CBA6780F }}
-          action: "close"

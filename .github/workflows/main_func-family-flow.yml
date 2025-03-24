@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
 
-name: func-family-flow Build and Deploy
+name: Build and deploy Python project to Azure Function App - func-family-flow
 
 on:
   push:
@@ -13,8 +13,8 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'api' # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
 
 jobs:
   build:
@@ -26,10 +26,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python version
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+      # - name: Setup Python version
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: ${{ env.PYTHON_VERSION }}
 
       # - name: Create and start virtual environment
       #   run: |
@@ -37,15 +37,12 @@ jobs:
       #     source venv/bin/activate
 
       # - name: Install dependencies
-      #   run: |
-      #     cd api
-      #     pip install -r requirements.txt -t .
+      #   run: pip install -r api/requirements.txt
 
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
         run: zip release.zip ./api/* -r
-
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -86,4 +83,3 @@ jobs:
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           remote-build: true
-
