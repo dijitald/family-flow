@@ -31,13 +31,13 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
+      # - name: Create and start virtual environment
+      #   run: |
+      #     python -m venv venv
+      #     source venv/bin/activate
 
-      - name: Install dependencies
-        run: pip install -r api/requirements.txt
+      # - name: Install dependencies
+      #   run: pip install -r api/requirements.txt
 
       # Optional: Add step to run tests here
 
@@ -81,4 +81,5 @@ jobs:
           app-name: 'func-family-flow'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          remote-build: true
 
