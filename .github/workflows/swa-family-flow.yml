@@ -34,10 +34,11 @@ jobs:
           app_location: "/" # App source code path
           api_location: "/api/" # Api source code path - optional
           output_location: "/dist/family-flow/browser" # Built app content directory - optional
+          remote_build: true
           ###### End of Repository/Build Configurations ######
-        env:
-          SCM_DO_BUILD_DURING_DEPLOYMENT: true
-          ENABLE_ORYX_BUILD: true
+        # env:
+        #   SCM_DO_BUILD_DURING_DEPLOYMENT: true
+        #   ENABLE_ORYX_BUILD: true
   
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
