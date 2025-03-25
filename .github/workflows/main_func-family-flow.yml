@@ -12,16 +12,11 @@ on:
       - 'api/**/*'
   workflow_dispatch:
 
-env:
-  AZURE_FUNCTIONAPP_NAME: 'func-family-flow' # set this to the name of your web app
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'api/.' # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -32,8 +27,8 @@ jobs:
         id: fa
         with:
           slot-name: 'Production'
-          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          app-name: 'func-family-flow'
+          package: 'api/.'
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
           sku: 'flexconsumption'
           remote-build: true
