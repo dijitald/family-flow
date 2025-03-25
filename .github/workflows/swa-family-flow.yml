@@ -11,7 +11,8 @@ on:
 
 env:
   PYTHON_VERSION: '3.10' # set this to the python version to use (supports 3.6, 3.7, 3.8)
-      
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'api'
+
 jobs:
   build_and_deploy_job:
     runs-on: ubuntu-latest
@@ -33,11 +34,22 @@ jobs:
           python -m venv venv
           source venv/bin/activate
 
-      - name: Install dependencies
-        run: pip install -r api/requirements.txt -t api/.
+      - name: 'Resolve Project Dependencies Using Pip'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+          popd
+
+      # - name: Install dependencies
+      #   run: pip install -r api/requirements.txt -t api/.
 
       - name: Zip test
-        run: zip release.zip ./api/* -r
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          zip -r function.zip .
+          popd
 
       - name: Build And Deploy
         id: builddeploy
@@ -49,7 +61,7 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
-          api_location: "/api/" # Api source code path - optional
+          api_location: "/${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/" # Api source code path - optional
           output_location: "/dist/family-flow/browser" # Built app content directory - optional
           remote_build: true
           ###### End of Repository/Build Configurations ######
