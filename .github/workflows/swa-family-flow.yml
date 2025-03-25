@@ -24,32 +24,29 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: Setup Python version
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+      # - name: Setup Python version
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
+      # - name: Create and start virtual environment
+      #   run: |
+      #     python -m venv venv
+      #     source venv/bin/activate
 
-      - name: 'Resolve Project Dependencies Using Pip'
-        shell: bash
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
-          popd
+      # - name: 'Resolve Project Dependencies Using Pip'
+      #   shell: bash
+      #   run: |
+      #     pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+      #     popd
 
-      # - name: Install dependencies
-      #   run: pip install -r api/requirements.txt -t api/.
-
-      - name: Zip test
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          zip -r function.zip .
-          popd
+      # - name: Zip test
+      #   run: |
+      #     pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+      #     zip -r function.zip .
+      #     popd
 
       - name: Build And Deploy
         id: builddeploy
@@ -63,9 +60,9 @@ jobs:
           app_location: "/" # App source code path
           api_location: "/${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/" # Api source code path - optional
           output_location: "/dist/family-flow/browser" # Built app content directory - optional
-          remote_build: true
+          # remote_build: true
           ###### End of Repository/Build Configurations ######
-        env:
-          SCM_DO_BUILD_DURING_DEPLOYMENT: true
-          ENABLE_ORYX_BUILD: true
+        # env:
+        #   SCM_DO_BUILD_DURING_DEPLOYMENT: true
+        #   ENABLE_ORYX_BUILD: true
   
