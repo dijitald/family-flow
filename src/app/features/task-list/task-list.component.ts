@@ -23,6 +23,7 @@ export class TaskListComponent implements OnInit {
   activeTask: Task | null = null;
   debug : Boolean = false;
   user: User | null = null;
+  selectedTabIndex: number = 0;
 
   constructor(
     private taskService: TaskService, 
