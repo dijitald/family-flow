@@ -34,12 +34,12 @@
       <mat-card-content>
         <div *ngIf="user.households && user.households.length > 0">
           <p>Click name to set as your <span class="ddHouseholdItem active">active</span> household</p>
-          <ul>
+          <ul class="ddHouseholdItem">
             <li class="ddHouseholdItem" *ngFor="let household of user.households" [ngClass]="{'active': household.householdid === user.householdid}" (click)="onActivateMembership(household)">
               <div class="household-item-content">
                 {{household.household.name}} [balance: {{household.balance | currency}}]<br>
                 <span *ngIf="debug" style="font-size: 8px;">{{household.householdid}}</span>
-                <button mat-raised-button *ngIf="household.householdid != user.householdid" color="primary" type="button" class="delete-button" (click)="onDeleteMembership(household, $event)"><mat-icon>delete</mat-icon></button>
+                <button mat-icon-button *ngIf="household.householdid != user.householdid" color="warn" class="delete-button" (click)="onDeleteMembership(household, $event)"><mat-icon>delete</mat-icon></button>
               </div>
             </li>
           </ul>
@@ -67,28 +67,5 @@
         </form>
       </mat-card-content>
     </mat-card>
-  </div>
-  <div *ngIf="debug" class="container">
-    <div class="flex-container" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start stretch">
-      <mat-card style="background-color: lightblue" appearance="outlined">
-        <mat-card-content *ngIf="user">
-          <p><strong>Id: </strong> {{user.id}}</p>
-          <p><strong>Guid: </strong> {{user.guid}}</p>
-          <p><strong>Email: </strong> {{user.email}}</p>
-          <p><strong>Name: </strong> {{user.name}}</p>
-          <p><strong>Household: </strong> {{user.householdid}}</p>
-          <p><strong>Created: </strong> {{user.createdOn}}</p>
-        </mat-card-content>
-      </mat-card>
-      <mat-card style="background-color: rgb(173, 230, 182)" appearance="outlined">
-        <mat-card-content>one</mat-card-content>
-      </mat-card>
-      <mat-card style="background-color: rgb(230, 194, 173)" appearance="outlined">
-        <mat-card-content>two</mat-card-content>
-      </mat-card>
-      <mat-card style="background-color: rgb(185, 173, 230)" appearance="outlined">
-        <mat-card-content>three</mat-card-content>
-      </mat-card>
-    </div>
   </div>
 </div>

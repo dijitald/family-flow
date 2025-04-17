@@ -1,0 +1,22 @@
+{
+    "householdid": "123",
+    "name": "Clean the kitchen",
+    "description": "Clean all surfaces and mop the floor",
+    "createdBy": "user1",
+    "createdOn": "",
+    "id": "",
+    "rewardAmount": "",
+    "active": "",
+    "lastCompleted": "",
+    "nextDueDate": "",
+    "frequency": "",
+    "everyWeekday": "",
+    "interval": "",
+    "dayOfWeek": "",
+    "dayOfMonth": "",
+    "instance": "",
+    "isInstanceBasedMonthly": "",
+    "monthOfYear": "",
+    "isInstanceBasedYearly": ""
+}
+

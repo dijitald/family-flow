@@ -76,8 +76,8 @@ class Household(Base):
     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
     users: Mapped[list["HouseholdMembership"]] = relationship("HouseholdMembership", back_populates="household")
-    tasks: Mapped[list["Task"]] = relationship("Task", back_populates="household")
-    activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="household")
+    # tasks: Mapped[list["Task"]] = relationship("Task", back_populates="household")
+    # activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="household")
 
 class User(Base):
     __tablename__ = 'users'
@@ -107,7 +107,7 @@ class HouseholdMembership(Base):
 class Task(Base):
     __tablename__ = 'tasks'
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
-    household: Mapped[Household] = relationship("Household", back_populates="tasks")
+    # household: Mapped[Household] = relationship("Household", back_populates="tasks")
     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
     name: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
     description: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
@@ -130,7 +130,7 @@ class Task(Base):
 class Activity(Base):
     __tablename__ = 'activities'
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
-    household: Mapped[Household] = relationship("Household", back_populates="activities")
+    # household: Mapped[Household] = relationship("Household", back_populates="activities")
     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
     date: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
     user: Mapped[User] = relationship("User", back_populates="activities")
@@ -142,8 +142,6 @@ class Activity(Base):
     tags: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
     
 try :
-    # Set up SQLAlchemy
-    #DATABASE_URL = "mssql+pyodbc://username:password@server:1433/database?driver=ODBC+Driver+18+for+SQL+Server"
     DATABASE_URL = os.getenv("DATABASE_CONNECTIONSTRING")
     engine = create_engine(DATABASE_URL)
     SQLAlchemyInstrumentor().instrument(engine=engine, service="familyflow")

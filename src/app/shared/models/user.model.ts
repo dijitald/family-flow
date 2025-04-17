@@ -1,4 +1,5 @@
 import { Activity } from "./activity.model";
+import { Household } from "./household.model";
 import { Membership } from "./membership.model";
 
 export class User{
@@ -15,4 +16,10 @@ export class User{
         public householdid: string,
         public households?: Membership[],
     ){}
+    public get household(): Household {
+        if (this.households && this.households.length > 0) {
+            return this.households.find(h => h.householdid === this.householdid)?.household;
+        }
+        return null;
+    }
 }

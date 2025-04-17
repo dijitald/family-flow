@@ -1,19 +1,18 @@
-<div class="container" fxLayout="row" fxLayoutAlign="center none">
+<div class="container">
+  <div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Dashboard</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Welcome back<span *ngIf="user">, {{user.name}}</span>!</p>
+      </mat-card-content>
+    </mat-card>
 
-  <div fxFlex="95%">
-    <div class="container" fxLayout="row" fxLayoutAlign="center none">
-
-      <h2>Welcome back<span *ngIf="user">, {{user.name}}</span>!</h2>
-
-    </div>
-
-    <div class="container" fxLayout="row" fxLayoutAlign="center none">
-      <div fxFlex="50%" class="text-center no-records animate">
-        <mat-icon aria-hidden="false">dashboard</mat-icon>
-        <p>This is the dashboard.</p>
-        <p>ping : <b>{{ message }}</b></p>
-      </div>
-      <mat-icon aria-hidden="false"> </mat-icon>
-    </div>
+    <mat-card appearance="outlined">
+      <mat-card-content>
+        <app-task-list></app-task-list>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

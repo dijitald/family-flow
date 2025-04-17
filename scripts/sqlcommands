@@ -6,7 +6,7 @@
 
 
 -- DELETE from dbo.activities
--- DELETE from dbo.tasks
+-- DELETE from dbo.tasks where id = -1
 -- DELETE from dbo.memberships
 -- DELETE from dbo.households
 -- --- DELETE from dbo.users
@@ -18,4 +18,7 @@
 select * from [dbo].[users] 
 select * from [dbo].[households]
 select * from [dbo].[memberships]
+select * from [dbo].[tasks]
+
+select * from [dbo].[activities]
 

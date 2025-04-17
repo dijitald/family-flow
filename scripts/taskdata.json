@@ -1,0 +1,24 @@
+{   
+    'id': 5, 
+    'householdid': '326d8685-ed65-40f4-82cd-1c8c170bbb84', 
+    'name': 'Clean the kitchen', 
+    'description': 'Clean all surfaces and mop the floor', 
+    'active': True, 
+    'rewardAmount': 0, 
+    'lastCompleted': None, 
+    'nextDueDate': None, 
+    'createdOn': '2025-03-30 21: 57: 20.937385', 
+    'createdBy': 'user1', 
+    'frequency': 'Daily', 
+    'everyWeekday': False, 
+    'interval': 0, 'dayOfWeek': 0, 'dayOfMonth': 0, 'instance': 0, 'isInstanceBasedMonthly': False, 'monthOfYear': 0, 'isInstanceBasedYearly': False, 'household': {'id': '326d8685-ed65-40f4-82cd-1c8c170bbb84', 'name': 'dog house', 'createdOn': '2025-03-21 18: 15: 30.441380', 'users': [
+            {'id': 3, 'householdid': '326d8685-ed65-40f4-82cd-1c8c170bbb84', 'userid': 1, 'role': 'member', 'balance': 0, 'createdOn': '2025-03-21 18: 15: 31.170421'
+            }
+        ], 'tasks': [
+            {'id': 5, 'householdid': '326d8685-ed65-40f4-82cd-1c8c170bbb84', 'name': 'Clean the kitchen', 'description': 'Clean all surfaces and mop the floor', 'active': True, 'rewardAmount': 0, 'lastCompleted': None, 'nextDueDate': None, 'createdOn': '2025-03-30 21: 57: 20.937385', 'createdBy': 'user1', 'frequency': None, 'everyWeekday': False, 'interval': 0, 'dayOfWeek': 0, 'dayOfMonth': 0, 'instance': 0, 'isInstanceBasedMonthly': False, 'monthOfYear': 0, 'isInstanceBasedYearly': False
+            },
+            {'id': 6, 'householdid': '326d8685-ed65-40f4-82cd-1c8c170bbb84', 'name': 'boooya!', 'description': None, 'active': True, 'rewardAmount': 0, 'lastCompleted': None, 'nextDueDate': None, 'createdOn': '2025-03-30 21: 59: 21.978470', 'createdBy': 'user1', 'frequency': None, 'everyWeekday': False, 'interval': 0, 'dayOfWeek': 0, 'dayOfMonth': 0, 'instance': 0, 'isInstanceBasedMonthly': False, 'monthOfYear': 0, 'isInstanceBasedYearly': False
+            }
+        ], 'activities': []
+    }
+}

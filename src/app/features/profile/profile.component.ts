@@ -11,6 +11,7 @@ import { User } from '../../shared/models/user.model';
 import { HouseholdService } from '../../shared/services/household.service';
 import { Membership } from '../../shared/models/membership.model';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
+import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
   selector: 'app-profile',
@@ -34,7 +35,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private householdService: HouseholdService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private currencyPipe: CurrencyPipe 
+    private currencyPipe: CurrencyPipe,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit() {
@@ -90,6 +92,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         ...this.profileForm.value
       };
       this.userService.updateUser(updatedUser);
+      setTimeout(() => {
+        this.notificationService.openSnackBar('Profile Saved');
+      });
     }
   }
 
@@ -139,6 +144,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
           console.log('membership added');
           this.user.householdid = hid;
           this.userService.updateUser(this.user);
+          setTimeout(() => {
+            this.notificationService.openSnackBar(`Welcome to the ${membership.household.name} household`);
+          });    
         }
         else
           console.error('add_membership', 'empty response');

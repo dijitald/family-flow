@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, Subject, takeUntil, tap, throwError } from 'rxjs';
+import { catchError, Observable, Subject, tap, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 import { Household } from '../models/household.model';

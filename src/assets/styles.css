@@ -11,8 +11,9 @@ body {
 }
 
 .container {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 20px auto;
+  padding: 10px;
+  max-width: 1200px;
 }
 
 .spinner {
@@ -148,14 +149,18 @@ p .mat-icon {
 }
 
 
-/* 
-custom styles */
+/* custom styles */
 
 
 mat-form-field.ddLargeInput
 {
   width: 300px;
   margin: 20px;
+}
+
+ul.ddHouseholdItem
+{
+  padding-inline-start: 0px;
 }
 
 li.ddHouseholdItem
@@ -167,12 +172,6 @@ li.ddHouseholdItem
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
-/* li.ddHouseholdItem button
-{
-  width: 25px;
-  float: right
-} */
 
 .ddHouseholdItem.active
 {
@@ -189,8 +188,9 @@ li.ddHouseholdItem
 }
 
 .delete-button {
-  width: 30px;
+  width: 20px;
   margin-left: auto;
+  padding: 10px;
 }
 button.ddButton_Profile
 {
@@ -205,4 +205,98 @@ button.ddButton_Household
 div.ddFormButtonGroup
 {
   padding: 10px;
+  display: flex;
+  /* justify-content: space-between; Spread buttons across the line */
+  gap: 20px; /* Add spacing between buttons */
+  margin-top: 20px; /* Optional: Add some space above the buttons */
+}
+
+
+ul.task-summary
+{
+  padding-inline-start: 0px;
+}
+
+li.task-summary-item
+{
+  list-style-type: none;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+li.task-summary-item:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.task-summary-content {
+  width: 100%;
+}
+
+.task-summary-item.active
+{
+  background-color: #e0f7fa;
+  border-color: #00acc1;
+}
+
+/* Task details section */
+.task-details {
+  flex: 1;
+}
+
+.task-title {
+  font-weight: bold;
+  font-size: 16px;
+  display: block;
+}
+
+.task-description {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Task meta section */
+.task-meta {
+  text-align: right;
+  margin-left: 20px;
+}
+
+.task-reward {
+  font-weight: bold;
+  display: block;
+}
+
+.task-due-date {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Delete button */
+button.delete-button {
+  margin-left: 10px;
+  color: #f44336;
+  transition: transform 0.2s ease;
+  margin-left: auto;
+}
+
+button.delete-button:hover {
+  transform: scale(1.1);
+}
+
+/* Add Task button container */
+.button-container {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.delete-button-container {
+  display: flex;
+  justify-content: flex-end; /* Align the button to the right */
+  /* margin-top: 20px; Add some spacing above the delete button */
 }
