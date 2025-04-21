@@ -2,11 +2,19 @@
   <mat-card appearance="outlined" style="width: 100%;">
     <mat-card-content>
       <form [formGroup]="taskForm" (ngSubmit)="onSave()">
-        <!-- Name Field -->
-        <mat-form-field appearance="fill" class="form-field full-width">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name">
-        </mat-form-field>
+       <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+          <!-- Name Field -->
+          <mat-form-field appearance="fill" fxFlex="70">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+
+          <!-- Reward Amount Field -->
+          <mat-form-field appearance="fill" fxFlex="30">
+            <mat-label>Reward Amount ($)</mat-label>
+            <input matInput type="number" formControlName="rewardAmount">
+          </mat-form-field>
+        </div>
 
         <!-- Description Field -->
         <mat-form-field appearance="fill" class="form-field full-width">
@@ -14,34 +22,50 @@
           <textarea matInput formControlName="description"></textarea>
         </mat-form-field>
 
-        <!-- Reward Amount Field -->
-        <mat-form-field appearance="fill" class="form-field full-width">
-          <mat-label>Reward Amount</mat-label>
-          <input matInput type="number" formControlName="rewardAmount">
-        </mat-form-field>
-
-        <!-- Frequency Field -->
-        <mat-form-field appearance="fill" class="form-field full-width">
-          <mat-label>Frequency</mat-label>
-          <mat-select formControlName="frequency">
-            <mat-option *ngFor="let freq of frequencies" [value]="freq">{{ freq }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <!-- Next Due Date Field -->
-        <!-- <mat-form-field appearance="fill" class="form-field full-width">
-          <mat-label>Next Due Date</mat-label>
-          <input matInput [matDatepicker]="picker2" formControlName="nextDueDate">
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
-        </mat-form-field> -->
-
-        <!-- Interval Field -->
-        <mat-form-field appearance="fill" class="form-field full-width">
-          <mat-label>Interval</mat-label>
-          <input matInput type="number" formControlName="interval">
-        </mat-form-field>
-
+        <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+          <mat-label fxFlex="15">Repeat every</mat-label>
+          <!-- Interval Field -->
+          <mat-form-field appearance="fill" fxFlex="15">
+            <!-- <mat-label>Repeat every</mat-label> -->
+            <input matInput type="number" formControlName="interval">
+          </mat-form-field>
+          <!-- Frequency Field -->
+          <mat-form-field appearance="fill" fxFlex="25">
+            <!-- <mat-label>Frequency</mat-label> -->
+            <mat-select formControlName="frequency">
+              <mat-option *ngFor="let freq of frequencies" [value]="freq">{{ freq }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- Next Due Date Field -->
+          <mat-form-field appearance="fill" fxFlex="45">
+            <mat-label>Next Due Date</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="nextDueDate">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <!-- <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px" *ngIf="['month'].includes(taskForm.get('frequency')?.value)">
+          <mat-label fxFlex="15">Which Week</mat-label>
+          <mat-form-field appearance="fill" fxFlex="85">
+            <mat-select formControlName="instance">
+              <mat-option *ngFor="let inst of instances" [value]="inst.value">{{ inst.label }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
+        <div class="form-row" fxLayout="column" fxLayoutGap="10px" *ngIf="taskForm.get('frequency')?.value === 'week'">
+          <mat-label>Which Day(s)</mat-label>
+          <div fxLayout="row wrap" fxLayoutGap="10px">
+            <mat-checkbox 
+                *ngFor="let day of days" 
+                [checked]="isPreselected(day.value)" 
+                (change)="onDayChange(day.value, $event)" 
+                [value] ="day.value.toString()"
+                [formControlName]="day.label">
+                  {{ day.label }}
+                </mat-checkbox>
+          </div>
+        </div>
+ 
         <!-- Buttons -->
         <div class="ddFormButtonGroup">
           <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.pristine">Save</button>

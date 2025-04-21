@@ -117,15 +117,15 @@ class Task(Base):
     nextDueDate: Mapped[datetime] = mapped_column(DATETIME2, nullable=True)
     createdOn: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
     createdBy: Mapped[str] = mapped_column(NVARCHAR, nullable=False)
-    frequency: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
-    everyWeekday: Mapped[bool] = mapped_column(BIT, default=False)
     interval: Mapped[int] = mapped_column(INTEGER, default=0)
+    frequency: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
     dayOfWeek: Mapped[int] = mapped_column(INTEGER, default=0)
-    dayOfMonth: Mapped[int] = mapped_column(INTEGER, default=0)
-    instance: Mapped[int] = mapped_column(INTEGER, default=0)
-    isInstanceBasedMonthly: Mapped[bool] = mapped_column(BIT, default=False)
-    monthOfYear: Mapped[int] = mapped_column(INTEGER, default=0)
-    isInstanceBasedYearly: Mapped[bool] = mapped_column(BIT, default=False)
+    # instance: Mapped[int] = mapped_column(INTEGER, default=0)
+    # everyWeekday: Mapped[bool] = mapped_column(BIT, default=False)
+    # dayOfMonth: Mapped[int] = mapped_column(INTEGER, default=0)
+    # isInstanceBasedMonthly: Mapped[bool] = mapped_column(BIT, default=False)
+    # monthOfYear: Mapped[int] = mapped_column(INTEGER, default=0)
+    # isInstanceBasedYearly: Mapped[bool] = mapped_column(BIT, default=False)
 
 class Activity(Base):
     __tablename__ = 'activities'

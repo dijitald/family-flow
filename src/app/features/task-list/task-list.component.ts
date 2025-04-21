@@ -9,10 +9,11 @@ import { UserService } from '../../shared/services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { User } from '../../shared/models/user.model';
+import { ActivityComponent } from '../activity/activity.component';
 
 @Component({
   selector: 'app-task-list',
-  imports: [CommonModule, FlexLayoutModule, CustomMaterialModule, TaskComponent],
+  imports: [CommonModule, FlexLayoutModule, CustomMaterialModule, TaskComponent, ActivityComponent],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
   providers: [CurrencyPipe]

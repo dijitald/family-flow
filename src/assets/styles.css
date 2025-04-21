@@ -219,6 +219,7 @@ ul.task-summary
 
 li.task-summary-item
 {
+  cursor: pointer;
   list-style-type: none;
   padding: 15px;
   margin: 10px 0;
