@@ -39,6 +39,17 @@ export const routes: Routes = [
       }
     ]
   },{ 
+    path: "tasks",
+    canActivate: [AuthGuard, MsalGuard],
+    canActivateChild: [AuthGuard, MsalGuard],
+    component: LayoutComponent,
+    children: [
+      {
+        path: "",
+        loadComponent : () => import('./features/task-list/task-list.component').then(m => m.TaskListComponent)
+      }
+    ]
+  },{ 
     path: "profile",
     canActivate: [AuthGuard, MsalGuard],
     canActivateChild: [AuthGuard, MsalGuard],
