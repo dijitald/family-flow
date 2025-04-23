@@ -7,7 +7,6 @@ import { LayoutComponent } from "./features/layout/layout.component";
 import { NoAuthGuard } from "./shared/auth/noAuth.guard";
 import { AuthGuard } from "./shared/auth/auth.guard";
 import { AboutComponent } from "./features/about/about.component";
-import { AdminGuard } from "./shared/auth/admin.guard";
 
 export const routes: Routes = [
   { 
@@ -17,9 +16,15 @@ export const routes: Routes = [
   },
   { 
     path: "about", 
-    component: AboutComponent, 
-    canActivate: [AuthGuard],
     pathMatch: 'full',
+    component: LayoutComponent,
+//    component: AboutComponent, 
+    children: [
+      {
+        path: "",
+        loadComponent : () => import('./features/about/about.component').then(m => m.AboutComponent)
+      }
+    ]
   },
   { 
     path: "login",
