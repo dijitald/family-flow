@@ -47,6 +47,7 @@ export class UserService implements OnInit, OnDestroy{
     .subscribe({
       next: (user: User) => {
         console.log("user loaded", user);
+        user = User.fromPlainObject(user);
         if (user)
           this._currentUser$.next(user);
       },
@@ -60,10 +61,12 @@ export class UserService implements OnInit, OnDestroy{
     this.http.put<User>('/api/users', user, {responseType: 'json'})
       .subscribe({
         next: (user: User) => {
-          if (user)
+          if (user){
+            user = User.fromPlainObject(user);
             this._currentUser$.next(user);
-          else
+          } else {
             console.error('updateUser', 'empty response');
+          }
         },
         error: err => {
           console.error('Failed to update user:', err);

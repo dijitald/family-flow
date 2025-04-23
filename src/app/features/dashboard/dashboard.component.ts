@@ -9,7 +9,6 @@ import { User } from '../../shared/models/user.model';
 import { NotificationService } from '../../shared/services/notification.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
 import { HttpClient } from '@angular/common/http';
-import { TaskListComponent } from "../task-list/task-list.component";
 
 @Component({
     selector: 'app-dashboard',
@@ -21,6 +20,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();
   user: User;
   message: string = '';
+  balance: number = 0;
 
   constructor(private notificationService: NotificationService,
     private titleService: Title,
@@ -35,7 +35,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.userService.currentUser$
       .pipe(takeUntil(this._destroying$))
       .subscribe((newuser) => {
-        if (newuser) this.user = newuser;
+        if (newuser) {
+          this.user = newuser;
+          this.balance = newuser.membership.balance;
+        }
       });
 
     this.http.get('/api/ping', {responseType: 'text'})

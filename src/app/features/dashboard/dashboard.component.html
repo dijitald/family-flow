@@ -1,8 +1,13 @@
 <div class="container">
   <div class="flex-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
     <mat-card appearance="outlined">
-      <mat-card-header>
+      <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
         <mat-card-title>Dashboard</mat-card-title>
+        <div class="balance-notification" fxFlex="none" style="margin-left: auto;">
+          <mat-chip color="primary" selected>
+            Balance: {{ balance| currency }}
+          </mat-chip>
+        </div>
       </mat-card-header>
       <mat-card-content>
         <p>Welcome back<span *ngIf="user">, {{user.name}}</span>!</p>
@@ -11,6 +16,8 @@
 
     <mat-card appearance="outlined">
       <mat-card-content>
+
+        
       </mat-card-content>
     </mat-card>
   </div>
