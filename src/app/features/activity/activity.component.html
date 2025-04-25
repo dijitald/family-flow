@@ -1,8 +1,42 @@
-<p>activity works!</p>
-        <!-- Next Due Date Field -->
-        <!-- <mat-form-field appearance="fill" class="form-field full-width">
-          <mat-label>Next Due Date</mat-label>
-          <input matInput [matDatepicker]="picker2" formControlName="nextDueDate">
-          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-          <mat-datepicker #picker2></mat-datepicker>
-        </mat-form-field> -->
+<mat-tab-group [(selectedIndex)]="selectedTabIndex">
+  <mat-tab label="Log Activity"></mat-tab>
+  <!-- <mat-tab label="Edit Task"></mat-tab> -->
+</mat-tab-group>
+
+<form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+  <div class="form-row" fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="10px">
+
+    <mat-form-field appearance="fill" fxFlex="50" fxFlex.sm="100">
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" fxFlex="30" fxFlex.sm="100">
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" formControlName="amount">
+    </mat-form-field>
+
+    <mat-radio-group formControlName="type" fxLayout="column" fxFlex="20" fxFlex.sm="100">
+      <mat-radio-button value="1">Credit</mat-radio-button>
+      <mat-radio-button value="-1">Debit</mat-radio-button>
+    </mat-radio-group>
+
+  </div>
+
+  <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Tags</mat-label>
+      <input matInput formControlName="tags">
+    </mat-form-field>
+  </div>
+  <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+    <button mat-raised-button color="primary" type="submit" [disabled]="activityForm.invalid" class="delete-button" >Save</button>
+  </div>  
+</form>

@@ -16,14 +16,14 @@ export class HouseholdService implements OnInit, OnDestroy {
     console.log('HouseholdService init');
   }
   
-  public get_household(id: string): void {
-    console.log('loading household from service', id);
+  // public get_household(id: string): void {
+  //   console.log('loading household from service', id);
     
-    this.http.get<Household>('/api/households', { headers : { "id": id }, responseType: 'json' })
-    .subscribe((resp: Household) => {
-        console.log(resp);
-    });
-  }
+  //   this.http.get<Household>('/api/households', { headers : { "id": id }, responseType: 'json' })
+  //   .subscribe((resp: Household) => {
+  //       console.log(resp);
+  //   });
+  // }
 
   public create_household(name: string): Observable<Household> {
     return this.http.post<Household>('/api/households', { "name" : name }, {responseType: 'json'}).pipe(

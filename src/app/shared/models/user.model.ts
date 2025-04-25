@@ -3,7 +3,7 @@ import { Membership } from "./membership.model";
 export class User{
 
     constructor(
-        public id: string,
+        public id: number,
         public guid: string, //liveid
         public email: string,
         public sms: string,

@@ -26,7 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   profileForm: FormGroup;
   householdForm: FormGroup;
   joinHouseholdForm: FormGroup;
-  user: User;
+  user: User | null = null;
   op: string;
   hid: string;
 
@@ -64,7 +64,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.profileForm.markAsPristine();
           if (this.op && this.hid && this.op == "join") {
             console.log('join household', this.hid);
-            this.add_membership(this.hid, this.user.id);
+            this.add_membership(this.hid, this.user.id.toString());
           }
         }
       });
@@ -113,7 +113,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.householdService.create_household(newHouseholdName.value).subscribe({
         next: (household) => {
           console.log('household added [%s : %s]', household.id, household.name);
-          this.add_membership(household.id, this.user.id);
+          this.add_membership(household.id, this.user.id.toString());
           this.householdForm.reset();
           newHouseholdName.setErrors(null);
         },
@@ -127,7 +127,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onJoinHousehold() {
     if (this.joinHouseholdForm.valid) {
       const householdId = this.joinHouseholdForm.get('householdId');      
-      this.add_membership(householdId.value, this.user.id);
+      this.add_membership(householdId.value, this.user.id.toString());
       this.joinHouseholdForm.reset();
       householdId.setErrors(null);
     }

@@ -9,12 +9,13 @@ import { User } from '../../shared/models/user.model';
 import { NotificationService } from '../../shared/services/notification.service';
 import { CustomMaterialModule } from '../../shared/custom-material/custom-material.module';
 import { HttpClient } from '@angular/common/http';
+import { ActivityComponent } from '../activity/activity.component';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
-    imports: [CommonModule, FlexLayoutModule, CustomMaterialModule]
+    imports: [CommonModule, FlexLayoutModule, CustomMaterialModule, ActivityComponent]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private readonly _destroying$ = new Subject<void>();

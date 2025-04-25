@@ -9,15 +9,18 @@
           </mat-chip>
         </div>
       </mat-card-header>
-      <mat-card-content>
-        <p>Welcome back<span *ngIf="user">, {{user.name}}</span>!</p>
-      </mat-card-content>
+      <mat-card-content></mat-card-content>
     </mat-card>
-
     <mat-card appearance="outlined">
       <mat-card-content>
-
-        
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div fxFlex="50">
+            <p>Welcome back<span *ngIf="user">, {{user.name}}</span>!</p>
+          </div>
+          <div fxFlex="50">
+            <app-activity></app-activity>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>

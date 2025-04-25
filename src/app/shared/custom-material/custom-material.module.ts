@@ -56,7 +56,7 @@ export const MY_FORMATS = {
     MatListModule, MatCardModule, MatProgressBarModule, MatInputModule,
     MatSnackBarModule, MatProgressSpinnerModule, MatDatepickerModule,
     MatAutocompleteModule, MatTableModule, MatDialogModule, MatTabsModule,
-    MatTooltipModule, MatSelectModule, MatPaginatorModule, MatChipsModule,
+    MatTooltipModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatChipsModule,
     MatButtonToggleModule, MatSlideToggleModule, MatBadgeModule, MatCheckboxModule,
     MatExpansionModule, DragDropModule, MatSortModule
   ],
@@ -66,7 +66,7 @@ export const MY_FORMATS = {
     MatListModule, MatCardModule, MatProgressBarModule, MatInputModule,
     MatSnackBarModule, MatMenuModule, MatProgressSpinnerModule, MatDatepickerModule,
     MatAutocompleteModule, MatTableModule, MatDialogModule, MatTabsModule,
-    MatTooltipModule, MatSelectModule, MatPaginatorModule, MatChipsModule,
+    MatTooltipModule, MatSelectModule, MatRadioModule, MatPaginatorModule, MatChipsModule,
     MatButtonToggleModule, MatSlideToggleModule, MatBadgeModule, MatCheckboxModule,
     MatExpansionModule, SelectCheckAllComponent, DragDropModule, MatSortModule
   ],

@@ -23,21 +23,21 @@
         </mat-form-field>
 
         <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
-          <mat-label fxFlex="15">Repeat every</mat-label>
+          <mat-label fxFlex="15" fxFlex.xs="100">Repeat every</mat-label>
           <!-- Interval Field -->
-          <mat-form-field appearance="fill" fxFlex="15">
+          <mat-form-field appearance="fill" fxFlex="15" fxFlex.xs="100">
             <!-- <mat-label>Repeat every</mat-label> -->
             <input matInput type="number" formControlName="interval">
           </mat-form-field>
           <!-- Frequency Field -->
-          <mat-form-field appearance="fill" fxFlex="25">
+          <mat-form-field appearance="fill" fxFlex="25" fxFlex.xs="100">
             <!-- <mat-label>Frequency</mat-label> -->
-            <mat-select formControlName="frequency">
+            <mat-select formControlName="frequency" fxFlex.xs="100">
               <mat-option *ngFor="let freq of frequencies" [value]="freq">{{ freq }}</mat-option>
             </mat-select>
           </mat-form-field>
           <!-- Next Due Date Field -->
-          <mat-form-field appearance="fill" fxFlex="45">
+          <mat-form-field appearance="fill" fxFlex="45" fxFlex.xs="100">
             <mat-label>Next Due Date</mat-label>
             <input matInput [matDatepicker]="picker2" formControlName="nextDueDate">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
