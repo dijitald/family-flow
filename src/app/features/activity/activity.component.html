@@ -4,25 +4,22 @@
 </mat-tab-group>
 
 <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
-  <div class="form-row" fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="10px">
+  <div class="form-row" fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="10px" style="padding-bottom: 12px;">
 
-    <mat-form-field appearance="fill" fxFlex="50" fxFlex.sm="100">
+    <mat-form-field appearance="fill" fxFlex="50" fxFlex.sm="100" subscriptSizing="dynamic">
       <mat-label>Date</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-
-    <mat-form-field appearance="fill" fxFlex="30" fxFlex.sm="100">
+    <mat-form-field appearance="fill" fxFlex="30" fxFlex.sm="100" subscriptSizing="dynamic">
       <mat-label>Amount</mat-label>
       <input matInput type="number" formControlName="amount">
     </mat-form-field>
-
     <mat-radio-group formControlName="type" fxLayout="column" fxFlex="20" fxFlex.sm="100">
       <mat-radio-button value="1">Credit</mat-radio-button>
       <mat-radio-button value="-1">Debit</mat-radio-button>
     </mat-radio-group>
-
   </div>
 
   <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
