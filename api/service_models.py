@@ -91,7 +91,7 @@ class User(Base):
     avatarPath: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'), nullable=True)
     households: Mapped[list["HouseholdMembership"]] = relationship("HouseholdMembership", back_populates="user")
-    activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="user")
+    # activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="user")
 
 class HouseholdMembership(Base):
     __tablename__ = 'memberships'
@@ -133,11 +133,11 @@ class Activity(Base):
     # household: Mapped[Household] = relationship("Household", back_populates="activities")
     householdid: Mapped[uuid.UUID] = mapped_column(UNIQUEIDENTIFIER, ForeignKey('households.id'))
     date: Mapped[datetime] = mapped_column(DATETIME2, default=datetime.now)
-    user: Mapped[User] = relationship("User", back_populates="activities")
+    # user: Mapped[User] = relationship("User", back_populates="activities")
     userId: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
     userName: Mapped[str] = mapped_column(NVARCHAR)
     amount: Mapped[float] = mapped_column(FLOAT, default=0)
-    isCredit: Mapped[bool] = mapped_column(BIT)  # true = credit, false = debit
+    type: Mapped[int] = mapped_column(INTEGER, default=0)
     description: Mapped[str] = mapped_column(NVARCHAR)
     tags: Mapped[str] = mapped_column(NVARCHAR, nullable=True)
     

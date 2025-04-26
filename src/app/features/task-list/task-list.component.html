@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="task-meta">
                                     <span class="task-reward">{{ task.rewardAmount | currency }}</span>
-                                    <span class="task-due-date">{{ task.nextDueDate ? (task.nextDueDate | date:'short') : 'No due date' }}</span>
+                                    <span class="task-due-date">{{ task.nextDueDate ? (task.nextDueDate | date:'shortDate') : 'No due date' }}</span>
                                 </div>
                             </div>
                         </li>

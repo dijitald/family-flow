@@ -68,6 +68,7 @@ export class ActivityComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.activityForm.valid) {
       console.log(this.activityForm.value);
+
       const newActivity = new Activity(
         this.user.householdid,
         this.activityForm.value.date,
@@ -83,7 +84,14 @@ export class ActivityComponent implements OnInit, OnChanges {
         next: (act) => {
           console.log('activity added [%s : %s]', act.id, act.date);
           this.activityForm.reset();
-          //newHouseholdName.setErrors(null);
+          this.activityForm.get('amount')?.setErrors(null);
+          this.activityForm.get('description')?.setErrors(null);
+          this.activityForm.get('type')?.setErrors(null);
+          this.activityForm.get('date')?.setErrors(null);
+
+          setTimeout(() => {
+            this.notificationService.openSnackBar('Activity added');
+          });
         },
         error: (error) => {
           console.error('Failed to create activity:', error);

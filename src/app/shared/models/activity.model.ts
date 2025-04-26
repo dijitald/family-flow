@@ -3,9 +3,9 @@ import { User } from "./user.model";
 
 export class Activity {
     constructor(
-        public householdId: string, 
+        public householdid: string, 
         public date: Date,
-        public user: string,
+        public userName: string,
         public userId: number,
         public amount: number,
         public type: ActivityType,

@@ -74,7 +74,7 @@ export class TaskComponent implements OnInit, OnChanges {
       rewardAmount: task.rewardAmount,
       frequency: task.frequency,
       interval: task.interval,
-      newDueDate: task.nextDueDate,
+      nextDueDate: task.nextDueDate,
       Monday: task.dayOfWeek & DayOfWeek.Monday ? true : false,
       Tuesday: task.dayOfWeek & DayOfWeek.Tuesday ? true : false,
       Wednesday: task.dayOfWeek & DayOfWeek.Wednesday ? true : false,

@@ -109,23 +109,10 @@ def update_task(task: Task) -> func.HttpResponse:
                 oldTask.nextDueDate = task.nextDueDate
             if task.frequency is not None:
                 oldTask.frequency = task.frequency
-            # if task.everyWeekday is not None:
-            #     oldTask.everyWeekday = task.everyWeekday
             if task.interval is not None:
                 oldTask.interval = task.interval
             if task.dayOfWeek is not None:
                 oldTask.dayOfWeek = task.dayOfWeek
-            # if task.dayOfMonth is not None:
-            #     oldTask.dayOfMonth = task.dayOfMonth
-            # if task.instance is not None:
-            #     oldTask.instance = task.instance
-            # if task.isInstanceBasedMonthly is not None:
-            #     oldTask.isInstanceBasedMonthly = task.isInstanceBasedMonthly
-            # if task.monthOfYear is not None:
-            #     oldTask.monthOfYear = task.monthOfYear
-            # if task.isInstanceBasedYearly is not None:
-            #     oldTask.isInstanceBasedYearly = task.isInstanceBasedYearly
-
 
             context.session.commit()
             context.logging.info(json.dumps(task.to_dict(), default=str))

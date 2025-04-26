@@ -34,6 +34,6 @@
     </mat-form-field>
   </div>
   <div class="form-row" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="10px">
-    <button mat-raised-button color="primary" type="submit" [disabled]="activityForm.invalid" class="delete-button" >Save</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="activityForm.invalid || activityForm.pristine" class="delete-button" >Save</button>
   </div>  
 </form>
